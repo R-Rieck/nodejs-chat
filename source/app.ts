@@ -1,16 +1,15 @@
-import { Response } from "express";
+import express, { NextFunction, Request, Response } from 'express';
+import cors from 'cors';
+import 'dotenv/config'
 
-import { Addition } from "./modules/addition";
-
-const express = require('express')
+import routes from './router/index';
 
 const app = express();
-const addition = new Addition();
 
-app.set('view engine', 'jade');
+app.use(cors())
+    .use(express.json())
+    .use(express.urlencoded({ extended: true }))
+    .use('/users', routes.user)
+    .use('/messages', routes.message);
 
-app.get('/', (req: Request, res: Response) => {
-    res.end(addition.AddNumber(5, 20).toString())
-})
-
-var server = app.listen(8080, () => console.log('ready'))
+app.listen(process.env.PORT, () => console.log('Your App is running on Port ' + process.env.PORT))
