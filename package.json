@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-tutorial",
+  "name": "nodejs-chat",
   "version": "1.0.0",
   "description": "",
   "main": "source/app.ts",
