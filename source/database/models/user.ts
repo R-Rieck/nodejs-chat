@@ -2,11 +2,7 @@ import mongoose, { mongo } from 'mongoose';
 
 const userSchema = new mongoose.Schema(
     {
-        id: {
-            required: true,
-            unique: true,
-            type: String
-        },
+        _id: mongoose.Schema.Types.ObjectId,
         username: {
             required: true,
             unique: true,
@@ -16,6 +12,16 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true,
             type: String
+        },
+        email: {
+            required: true,
+            unique: true,
+            type: String
+        },
+        createdAt: {
+            required: true,
+            unique: true,
+            type: Date
         }
     },
     {

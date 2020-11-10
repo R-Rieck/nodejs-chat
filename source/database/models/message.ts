@@ -1,12 +1,8 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema(
     {
-        id: {
-            required: true,
-            unique: true,
-            type: String
-        },
+        _id: mongoose.Schema.Types.ObjectId,
         text: {
             required: true,
             type: String
@@ -20,6 +16,4 @@ const messageSchema = new mongoose.Schema(
     }
 )
 
-const message = mongoose.model('Message', messageSchema)
-
-export default message;
+module.exports = mongoose.model('Message', messageSchema)

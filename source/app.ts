@@ -3,8 +3,11 @@ import cors from 'cors';
 import 'dotenv/config'
 
 import routes from './router/index';
+import { InitializeDatabase } from './database';
 
 const app = express();
+
+InitializeDatabase().then((result: any) => console.log(result)).catch((err: Error) => console.log(err))
 
 app.use(cors())
     .use(express.json())

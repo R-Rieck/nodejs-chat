@@ -1,16 +1,13 @@
 import { Request, Response, Router } from 'express';
-import { Users } from '../../database/sampleData';
 import { User } from '../../types/UserModel';
 import { addUser, deleteUser } from '../../handlers/userHandler';
 
 const router = Router();
 
 router.get('/', (req: Request, res: Response) => {
-    return res.send(Users)
 })
 
 router.get('/:userId', (req: Request, res: Response) => {
-    res.send(Users.find(k => k.id === req.params.userId))
 })
 
 router.post('/', (req: Request, res: Response) => {

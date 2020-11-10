@@ -1,16 +1,13 @@
 import { Request, Response, Router } from 'express';
-import { Messages } from '../../database/sampleData';
 import { Message } from '../../types/UserModel';
 import { addMessage, deleteMessage } from '../../handlers/messageHandler';
 
 const routes = Router()
 
 routes.get('', (req: Request, res: Response) => {
-    res.send(Messages)
 })
 
 routes.get('/:messageId', (req: Request, res: Response) => {
-    res.send(Messages.find(message => message.id === req.params.userId))
 })
 
 routes.post('', (req: Request, res: Response) => {

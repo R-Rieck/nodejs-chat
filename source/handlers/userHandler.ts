@@ -1,35 +1,24 @@
-import { Users } from "../database/sampleData";
 import { User } from "../types/UserModel";
-import { v4 as uuidv4 } from 'uuid'
+import mongoose from 'mongoose';
+import userSchema from '../database/models/user';
 
 export const addUser = (user: User): string => {
-    const userExists = Users.some(element => element.username === user.username)
+    console.log(new Date())
 
-    if (!userExists) {
-        Users.push({ ...user, id: uuidv4() })
-        return "Added User to Database Successfully!"
-    }
-    else {
-        return "User already exist!"
-    }
+    const dbUser = new userSchema({
+        _id: new mongoose.Types.ObjectId(),
+        username: user.username,
+        email: user.email,
+        createdAt: new Date(),
+        password: user.password
+    })
+
+    dbUser.save().then((result: any) => console.log(result)).catch((err: Error) => console.log(err.message))
+
+    return 'success'
 }
 
 export const deleteUser = (id: string): string => {
-    const userExists = Users.some(element => element.id === id)
 
-    if (userExists) {
-        //Get new Copie of Array without the Deleted User
-        const Cleanedlist = Users.filter((user: User) => user.id !== id)
-
-        //Clear the old List
-        Users.length = 0
-
-        //push every User of the Copie into the Users List
-        Cleanedlist.forEach((user: User) => Users.push(user));
-
-        return "Deleted User from Database Successfully!"
-    }
-    else {
-        return "User doesn't exist!"
-    }
+    return "User doesn't exist!"
 }
