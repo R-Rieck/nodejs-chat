@@ -1,13 +1,16 @@
 import { Request, Response, Router } from 'express';
 import { User } from '../../types/UserModel';
-import { addUser, deleteUser } from '../../handlers/userHandler';
+import { addUser, deleteUser, getUserById } from '../../handlers/userHandler';
 
 const router = Router();
 
 router.get('/', (req: Request, res: Response) => {
 })
 
-router.get('/:userId', (req: Request, res: Response) => {
+router.get('/:userId', async (req: Request, res: Response) => {
+    const user = await getUserById(req.params.userId);
+
+    res.send(user)
 })
 
 router.post('/', async (req: Request, res: Response) => {

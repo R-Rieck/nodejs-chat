@@ -2,6 +2,12 @@ import { User } from "../types/UserModel";
 import mongoose from 'mongoose';
 import userSchema from '../database/models/user';
 
+export const getUserById = async (id: string) => {
+    const user = userSchema.findById(id).exec().then(result => result)
+
+    return await user;
+}
+
 export const addUser = async (user: User): Promise<any> => {
     const dbUser = new userSchema({
         _id: new mongoose.Types.ObjectId(),
