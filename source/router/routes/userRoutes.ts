@@ -1,10 +1,11 @@
 import { Request, Response, Router } from 'express';
 import { User } from '../../types/UserModel';
-import { addUser, deleteUser, getUserById } from '../../handlers/userHandler';
+import { addUser, deleteUser, getUserById, updateUser } from '../../handlers/userHandler';
 
 const router = Router();
 
 router.get('/', (req: Request, res: Response) => {
+    res.send('You can\'t get all users. Try to retrieve with as single userId instead.')
 })
 
 router.get('/:userId', async (req: Request, res: Response) => {
@@ -27,8 +28,12 @@ router.delete('/:userId', async (req: Request, res: Response) => {
     res.send(infoMessage)
 })
 
-router.put('/:userId', (req: Request, res: Response) => {
-    res.send('Update the User with ID of:' + req.params.userId)
+router.put('/:userId', async (req: Request, res: Response) => {
+    const user: User = req.body;
+
+    const infoMessage = await updateUser(user, req.params.userId);
+
+    res.send(infoMessage)
 })
 
 export default router

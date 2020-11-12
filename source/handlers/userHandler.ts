@@ -39,3 +39,15 @@ export const deleteUser = async (id: string): Promise<any> => {
     })
     return await message;
 }
+
+export const updateUser = async (user: User, id: string): Promise<any> => {
+    const message = userSchema.updateOne({ _id: id }, { ...user }).exec().then(result => {
+        if (result.n > 0) {
+            return `user with ID: ${id} updated`
+        }
+        else
+            return `cannot find user with ID: ${id}`
+    })
+
+    return await message;
+}
