@@ -5,5 +5,6 @@ const connectionstring = 'mongodb+srv://Pl4typus:' + process.env.MONGO_DB_PW + '
 export const InitializeDatabase = () =>
     mongoose.connect(connectionstring, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useCreateIndex: true
     })

@@ -2,8 +2,7 @@ import { User } from "../types/UserModel";
 import mongoose from 'mongoose';
 import userSchema from '../database/models/user';
 
-export const addUser = (user: User): any => {
-
+export const addUser = async (user: User): Promise<any> => {
     const dbUser = new userSchema({
         _id: new mongoose.Types.ObjectId(),
         username: user.username,
@@ -12,14 +11,15 @@ export const addUser = (user: User): any => {
         password: user.password
     })
 
-    userSchema.findOne({ username: user.username, email: user.email }).exec().then(result => {
-        console.log(result)
-        result === null ?
-            dbUser.save() :
-            console.log('user exists');
+    const message = userSchema.findOne({ username: user.username, email: user.email }).exec().then(result => {
+        if (result === null) {
+            dbUser.save();
+            return 'user created'
+        }
+        else return `user with ID: ${result._id} exists`
     });
 
-    return "success"
+    console.log(await message)
 }
 
 export const deleteUser = (id: string): string => {
