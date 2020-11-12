@@ -14,15 +14,22 @@ export const addUser = async (user: User): Promise<any> => {
     const message = userSchema.findOne({ username: user.username, email: user.email }).exec().then(result => {
         if (result === null) {
             dbUser.save();
-            return 'user created'
+            return `user with ID: ${user._id} created`
         }
         else return `user with ID: ${result._id} exists`
     });
 
-    console.log(await message)
+    return await message;
 }
 
-export const deleteUser = (id: string): string => {
-
-    return "User doesn't exist!"
+export const deleteUser = async (id: string): Promise<any> => {
+    const message = userSchema.findById(id).exec().then(result => {
+        if (result !== null) {
+            result.deleteOne();
+            return `user with ID: ${result._id} deleted`
+        }
+        else
+            return `cannot find user with ID: ${id}`
+    })
+    return await message;
 }

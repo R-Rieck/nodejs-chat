@@ -10,16 +10,16 @@ router.get('/', (req: Request, res: Response) => {
 router.get('/:userId', (req: Request, res: Response) => {
 })
 
-router.post('/', (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
     const user: User = req.body;
 
-    const infoMessage = addUser(user);
+    const infoMessage = await addUser(user);
 
     res.send(infoMessage)
 })
 
-router.delete('/:userId', (req: Request, res: Response) => {
-    const infoMessage = deleteUser(req.params.userId);
+router.delete('/:userId', async (req: Request, res: Response) => {
+    const infoMessage = await deleteUser(req.params.userId);
 
     res.send(infoMessage)
 })
