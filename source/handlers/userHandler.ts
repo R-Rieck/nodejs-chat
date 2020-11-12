@@ -2,8 +2,7 @@ import { User } from "../types/UserModel";
 import mongoose from 'mongoose';
 import userSchema from '../database/models/user';
 
-export const addUser = (user: User): string => {
-    console.log(new Date())
+export const addUser = (user: User): any => {
 
     const dbUser = new userSchema({
         _id: new mongoose.Types.ObjectId(),
@@ -13,9 +12,14 @@ export const addUser = (user: User): string => {
         password: user.password
     })
 
-    dbUser.save().then((result: any) => console.log(result)).catch((err: Error) => console.log(err.message))
+    userSchema.findOne({ username: user.username, email: user.email }).exec().then(result => {
+        console.log(result)
+        result === null ?
+            dbUser.save() :
+            console.log('user exists');
+    });
 
-    return 'success'
+    return "success"
 }
 
 export const deleteUser = (id: string): string => {
