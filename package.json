@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/RRieck/nodejs-tutorial.git"
   },
-  "author": "",
+  "author": "Ron Rieck",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/RRieck/nodejs-tutorial/issues"
