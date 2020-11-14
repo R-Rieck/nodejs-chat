@@ -17,7 +17,7 @@ export const addUser = async (user: User): Promise<any> => {
         password: user.password
     })
 
-    const message = userSchema.findOne({ username: user.username, email: user.email }).exec().then(result => {
+    const reponse = userSchema.findOne({ username: user.username, email: user.email }).exec().then((result: mongoose.MongooseDocument | null) => {
         if (result === null) {
             dbUser.save();
             return `user with ID: ${user._id} created`
@@ -25,11 +25,11 @@ export const addUser = async (user: User): Promise<any> => {
         else return `user with ID: ${result._id} exists`
     });
 
-    return await message;
+    return await reponse;
 }
 
 export const deleteUser = async (id: string): Promise<any> => {
-    const message = userSchema.findById(id).exec().then(result => {
+    const reponse = userSchema.findById(id).exec().then(result => {
         if (result !== null) {
             result.deleteOne();
             return `user with ID: ${result._id} deleted`
@@ -37,11 +37,11 @@ export const deleteUser = async (id: string): Promise<any> => {
         else
             return `cannot find user with ID: ${id}`
     })
-    return await message;
+    return await reponse;
 }
 
 export const updateUser = async (user: User, id: string): Promise<any> => {
-    const message = userSchema.updateOne({ _id: id }, { ...user }).exec().then(result => {
+    const response = userSchema.updateOne({ _id: id }, { ...user }).exec().then(result => {
         if (result.n > 0) {
             return `user with ID: ${id} updated`
         }
@@ -49,5 +49,5 @@ export const updateUser = async (user: User, id: string): Promise<any> => {
             return `cannot find user with ID: ${id}`
     })
 
-    return await message;
+    return await response;
 }

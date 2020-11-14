@@ -7,8 +7,13 @@ const messageSchema = new mongoose.Schema(
             required: true,
             type: String
         },
-        user: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'User'
+        createdAt: {
+            required: true,
+            type: Date
+        },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId, ref: 'User',
+            required: true
         }
     },
     {
@@ -16,4 +21,6 @@ const messageSchema = new mongoose.Schema(
     }
 )
 
-module.exports = mongoose.model('Message', messageSchema)
+const message = mongoose.model('Message', messageSchema)
+
+export default message;

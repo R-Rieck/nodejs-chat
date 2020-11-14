@@ -10,16 +10,16 @@ routes.get('', (req: Request, res: Response) => {
 routes.get('/:messageId', (req: Request, res: Response) => {
 })
 
-routes.post('', (req: Request, res: Response) => {
+routes.post('', async (req: Request, res: Response) => {
     const message: Message = req.body;
 
-    const infoMessage = addMessage(message);
+    const infoMessage = await addMessage(message);
 
     res.send(infoMessage)
 })
 
-routes.delete('/:messageId', (req: Request, res: Response) => {
-    const infoMessage = deleteMessage(req.params.userId);
+routes.delete('/:messageId', async (req: Request, res: Response) => {
+    const infoMessage = await deleteMessage(req.params.messageId);
 
     res.send(infoMessage)
 })
