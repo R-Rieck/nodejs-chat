@@ -1,14 +1,14 @@
 import { Message } from "../types/UserModel";
 import messageSchema from '../database/models/message'
 import mongoose from 'mongoose';
-import { resolveProjectReferencePath } from "typescript";
+import message from "../database/models/message";
 
 export const getMessagesFromUser = async (userId: string): Promise<any> => {
-
+    return await messageSchema.find({ userId: userId }).exec().then(result => result);
 }
 
 export const getSingleMessage = async (id: string): Promise<any> => {
-
+    return await messageSchema.findById(id).exec().then(result => result);
 }
 
 export const addMessage = async (msg: Message): Promise<any> => {
@@ -21,6 +21,7 @@ export const addMessage = async (msg: Message): Promise<any> => {
 
     const response = messageSchema
         .findOne({ _id: msg._id })
+        .populate('userId')
         .exec()
         .then((result: mongoose.MongooseDocument | null) => {
             if (result === null) {
@@ -47,6 +48,15 @@ export const deleteMessage = async (id: string): Promise<any> => {
     return await response;
 }
 
-export const updateMessage = async (id: string): Promise<any> => {
+export const updateMessage = async (msg: Message, id: string): Promise<any> => {
+    const response = messageSchema.updateOne({ _id: id }, { ...msg }).exec().then(result => {
+        if (result.n > 0) {
+            return `user with ID: ${id} updated`
+        }
+        else
+            return `cannot find user with ID: ${id}`
+    })
 
+
+    return await response;
 }
