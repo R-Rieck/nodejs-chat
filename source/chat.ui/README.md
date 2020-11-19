@@ -3,4 +3,4 @@
 _Disclaimer:_ all images are free to use! Nevertheless I will credit every author with the Link below.
 
 _Login Background_:
-Shot By: Stephan Seeber => https://www.pexels.com/de-de/foto/4k-wallpaper-baume-berge-dammerung-1261728/
+Shot By: Miguel Á. Padriñán => https://www.pexels.com/de-de/foto/farben-gestalten-karte-leer-1111369/

@@ -1,0 +1,37 @@
+.login-box-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 20rem;
+  height: 4rem;
+  border-bottom: 1px solid #ccced7;
+  margin: 1rem 0;
+}
+
+.login-textbox,
+.login-passwordbox {
+  width: 15rem;
+  height: 4rem;
+  background-color: transparent;
+  color: black;
+  border: none;
+  font-size: 1.4rem;
+}
+
+.login-textbox:active,
+.login-passwordbox:active,
+.login-textbox:focus,
+.login-passwordbox:focus {
+  outline: none;
+}
+
+.button-wrapper {
+  > button {
+    cursor: pointer;
+  }
+
+  > button:active,
+  button:focus {
+    outline: none;
+  }
+}
