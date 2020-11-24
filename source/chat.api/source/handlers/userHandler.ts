@@ -1,11 +1,25 @@
 import { User } from "../types/UserModel";
 import mongoose from 'mongoose';
 import userSchema from '../database/models/user';
+import user from "../database/models/user";
+import { comparePassword, hashPassword } from "../infrastructure/passwordEncrypter";
 
 export const getUserById = async (id: string) => {
     const user = userSchema.findById(id).exec().then(result => result)
 
     return await user;
+}
+
+export const validateUser = async (credentials: { login: string, password: string }) => {
+    console.log('validating...')
+    const userObj = await userSchema.findOne({
+        $or: [
+            { 'email': credentials.login },
+            { 'username': credentials.login }
+        ]
+    })
+
+    return await comparePassword(credentials.password, userObj && userObj.toJSON().password);
 }
 
 export const addUser = async (user: User): Promise<any> => {
@@ -14,7 +28,7 @@ export const addUser = async (user: User): Promise<any> => {
         username: user.username,
         email: user.email,
         createdAt: new Date(),
-        password: user.password
+        password: await hashPassword(user.password)
     })
 
     const reponse = userSchema.findOne({ username: user.username, email: user.email }).exec().then((result: mongoose.MongooseDocument | null) => {

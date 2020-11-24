@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { User } from '../../types/UserModel';
-import { addUser, deleteUser, getUserById, updateUser } from '../../handlers/userHandler';
+import { addUser, deleteUser, getUserById, updateUser, validateUser } from '../../handlers/userHandler';
 
 const router = Router();
 
@@ -8,7 +8,17 @@ router.get('/', (req: Request, res: Response) => {
     res.send('You can\'t get all users. Try to retrieve with as single userId instead.')
 })
 
-router.get('/:userId', async (req: Request, res: Response) => {
+
+router.post('/login', async (req: Request, res: Response) => {
+    console.log({ ...req.body });
+
+
+    const isValid = await validateUser({ ...req.body });
+
+    res.json({ isValid: isValid })
+})
+
+router.get('/usre/:userId', async (req: Request, res: Response) => {
     const user = await getUserById(req.params.userId);
 
     res.send(user)
@@ -16,6 +26,8 @@ router.get('/:userId', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
     const user: User = req.body;
+
+    console.log(user);
 
     const infoMessage = await addUser(user);
 

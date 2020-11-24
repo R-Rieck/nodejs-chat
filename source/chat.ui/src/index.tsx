@@ -2,13 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import reportWebVitals from "./reportWebVitals";
 import { Login } from "./pages/login/index";
+import { StoreProvider } from "./context/userContext";
 import "./styles/index.scss";
 
 ReactDOM.render(
   <React.StrictMode>
-    <div className="app">
-      <Login />
-    </div>
+    <StoreProvider>
+      <div className="app">
+        <Login />
+      </div>
+    </StoreProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

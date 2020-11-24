@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { LoginView } from "../../components/login/loginView";
+import { RegistrationView } from "../../components/login/registrationView";
 import anime from "animejs";
 
 export const Login = () => {
@@ -30,9 +31,7 @@ export const Login = () => {
             <LoginView onClick={() => handleSideSwitch()} />
           </div>
           <div className="login-inputbox__back">
-            <div>
-              <h2>Sign Up!</h2>
-            </div>
+            <RegistrationView onClick={() => handleSideSwitch()} />
           </div>
         </div>
       </div>
