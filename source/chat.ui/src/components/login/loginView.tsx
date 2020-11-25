@@ -11,14 +11,12 @@ type loginViewProps = {
 };
 
 export const LoginView = (props: loginViewProps) => {
-  const { user, setUser, isValid } = useUserContext();
+  const { setUser, isValid } = useUserContext();
   const [localUser, setLocalUser] = useState<User>({
     username: "",
     password: "",
     email: "",
   });
-
-  useEffect(() => console.log(user, isValid), [isValid]);
 
   return !isValid ? (
     <div>
@@ -26,6 +24,8 @@ export const LoginView = (props: loginViewProps) => {
       <Textbox
         name="E-Mail or Username"
         icon={faEnvelope}
+        inputType={undefined}
+        isValid={() => undefined}
         onChange={(text: string) =>
           setLocalUser({ ...localUser, username: text, email: text })
         }
@@ -35,6 +35,7 @@ export const LoginView = (props: loginViewProps) => {
         onChange={(text: string) =>
           setLocalUser({ ...localUser, password: text })
         }
+        shouldValidate={false}
       />
       <Button
         text="Log In!"
