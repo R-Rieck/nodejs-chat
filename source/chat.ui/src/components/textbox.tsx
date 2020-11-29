@@ -1,7 +1,6 @@
-import React, { isValidElement, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import validation from "../infrastructure/validation";
 
 export enum InputType {
   "username",
@@ -13,25 +12,13 @@ type TextboxProps = {
   icon: IconDefinition;
   inputType: InputType | undefined;
   onChange: (text: string) => void;
-  isValid: (isValid: boolean) => void | undefined;
+  isValid: boolean;
 };
 
 export const Textbox = (props: TextboxProps) => {
+  const { icon, name, onChange, inputType, isValid } = props;
+
   const [text, setText] = useState<string>("");
-  const [isValid, setIsValid] = useState<boolean>(false);
-
-  const { icon, name, onChange, inputType } = props;
-
-  useEffect(() => setIsValid(validate()), [text]);
-  useEffect(() => props.isValid(isValid), [isValid]);
-
-  const validate = (): boolean => {
-    if (inputType === InputType.email) return validation.isValidEmail(text);
-    if (inputType === InputType.username)
-      return validation.isValidUsername(text);
-
-    return false;
-  };
 
   return (
     <div

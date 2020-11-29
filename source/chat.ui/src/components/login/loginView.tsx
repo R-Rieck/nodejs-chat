@@ -25,17 +25,17 @@ export const LoginView = (props: loginViewProps) => {
         name="E-Mail or Username"
         icon={faEnvelope}
         inputType={undefined}
-        isValid={() => undefined}
         onChange={(text: string) =>
           setLocalUser({ ...localUser, username: text, email: text })
         }
+        isValid={true}
       />
       <Passwordbox
         name="Password"
         onChange={(text: string) =>
           setLocalUser({ ...localUser, password: text })
         }
-        shouldValidate={false}
+        isValid={true}
       />
       <Button
         text="Log In!"

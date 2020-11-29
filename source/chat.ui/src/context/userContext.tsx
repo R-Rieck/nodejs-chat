@@ -20,7 +20,7 @@ export const StoreProvider = ({ children }: any) => {
   useEffect(() => fetchLogin(), [user]);
 
   const changeUser = (usr: User) => {
-    setUser({ user: { ...user.user, ...usr } });
+    setUser({ ...user, user: { ...user.user, ...usr } });
   };
 
   const fetchLogin = (): void => {
@@ -29,7 +29,7 @@ export const StoreProvider = ({ children }: any) => {
       password: user.user?.password,
     });
 
-    if (user.user !== undefined)
+    if (user.user !== undefined && user.isValid === false) {
       fetch("http://localhost:3001/users/login", {
         headers: {
           Accept: "application/json",
@@ -43,6 +43,7 @@ export const StoreProvider = ({ children }: any) => {
           if (result.isValid) setUser({ ...user, isValid: true });
         })
         .catch((err) => console.log(err));
+    }
   };
 
   return (
