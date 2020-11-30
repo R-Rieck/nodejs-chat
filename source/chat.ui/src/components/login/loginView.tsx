@@ -17,10 +17,18 @@ export const LoginView = (props: loginViewProps) => {
     password: "",
     email: "",
   });
+  const [validInput, setValidInput] = useState<boolean>(true);
 
   return !isValid ? (
     <div>
       <h2>Login!</h2>
+      <p
+        style={
+          validInput ? { visibility: "hidden" } : { visibility: "visible" }
+        }
+      >
+        Wrong Username/Password!
+      </p>
       <Textbox
         name="E-Mail or Username"
         icon={faEnvelope}
@@ -48,7 +56,10 @@ export const LoginView = (props: loginViewProps) => {
           margin: "1.5rem 0",
           padding: "0.8rem 8rem",
         }}
-        onClick={() => setUser !== undefined && setUser(localUser)}
+        onClick={() =>
+          setUser !== undefined &&
+          setUser(localUser).then((result) => setValidInput(result))
+        }
       />
       <Button
         text="Sign Up"

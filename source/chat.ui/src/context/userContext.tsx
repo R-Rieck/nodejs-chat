@@ -14,40 +14,80 @@ export const useUserContext = () => {
 export const StoreProvider = ({ children }: any) => {
   const [user, setUser] = useState<Partial<UserContext>>({
     user: undefined,
-    isValid: false,
+    isValid: undefined,
   });
 
-  useEffect(() => fetchLogin(), [user]);
-
-  const changeUser = (usr: User) => {
-    setUser({ ...user, user: { ...user.user, ...usr } });
-  };
-
-  const fetchLogin = (): void => {
+  const fetchRegistration = async (usr: User): Promise<boolean> => {
     const body = JSON.stringify({
-      login: user.user?.username || user.user?.email,
-      password: user.user?.password,
+      username: usr.username,
+      email: usr.email,
+      password: usr.password,
     });
 
-    if (user.user !== undefined && user.isValid === false) {
-      fetch("http://localhost:3001/users/login", {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: body,
+    const result = await fetch("http://localhost:3001/users/", {
+      method: "POST",
+      body: body,
+      headers: new Headers({ "content-type": "application/json" }),
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        setUser({
+          user: {
+            username: result.username,
+            email: result.email,
+            password: result.password,
+          },
+          isValid: true,
+        });
+
+        return true;
       })
-        .then((result) => result.json())
-        .then((result) => {
-          if (result.isValid) setUser({ ...user, isValid: true });
-        })
-        .catch((err) => console.log(err));
-    }
+      .catch((err: Error) => false);
+
+    return result;
+  };
+
+  const fetchLogin = async (usr: User): Promise<boolean> => {
+    const body = await JSON.stringify({
+      login: usr.username || usr.email,
+      password: usr.password,
+    });
+
+    const result = fetch("http://localhost:3001/users/login", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: body,
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        if (result.isValid) {
+          setUser({
+            user: {
+              username: usr.username,
+              email: usr.email,
+              password: usr.password,
+            },
+            isValid: true,
+          });
+          return true;
+        } else return false;
+      })
+      .catch((err) => false);
+
+    return await result;
   };
 
   return (
-    <userContext.Provider value={{ ...user, setUser: changeUser }}>
+    <userContext.Provider
+      value={{
+        ...user,
+        setUser: fetchLogin,
+        userRegistration: fetchRegistration,
+      }}
+    >
       {children}
     </userContext.Provider>
   );

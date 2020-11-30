@@ -28,7 +28,7 @@ type ValidationType = {
 };
 
 export const RegistrationView = (props: RegistrationViewProps) => {
-  const { setUser } = useUserContext();
+  const { userRegistration } = useUserContext();
   const [localUser, setLocalUser] = useState<InputFormFields>({
     username: "",
     email: "",
@@ -61,12 +61,12 @@ export const RegistrationView = (props: RegistrationViewProps) => {
 
   const handleRegistration = () => {
     if (
-      setUser &&
+      userRegistration &&
       validation.username &&
       validation.email &&
       validation.password
     )
-      setUser({
+      userRegistration({
         username: localUser.username,
         email: localUser.email,
         password: localUser.password,

@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import userSchema from '../database/models/user';
 import user from "../database/models/user";
 import { comparePassword, hashPassword } from "../infrastructure/passwordEncrypter";
+import { json } from "body-parser";
 
 export const getUserById = async (id: string) => {
     const user = userSchema.findById(id).exec().then(result => result)
@@ -11,13 +12,15 @@ export const getUserById = async (id: string) => {
 }
 
 export const validateUser = async (credentials: { login: string, password: string }) => {
-    console.log('validating...')
     const userObj = await userSchema.findOne({
         $or: [
             { 'email': credentials.login },
             { 'username': credentials.login }
         ]
     })
+
+    if (userObj === null) return false;
+
 
     return await comparePassword(credentials.password, userObj && userObj.toJSON().password);
 }
@@ -31,13 +34,16 @@ export const addUser = async (user: User): Promise<any> => {
         password: await hashPassword(user.password)
     })
 
-    const reponse = userSchema.findOne({ username: user.username, email: user.email }).exec().then((result: mongoose.MongooseDocument | null) => {
+    const reponse = userSchema.findOne({ username: user.username, email: user.email }).exec().then(async (result: mongoose.MongooseDocument | null) => {
         if (result === null) {
-            dbUser.save();
-            return `user with ID: ${user._id} created`
+            const document = await dbUser.save().catch((err: mongoose.Error) => err);
+
+            return document.toString().includes('email' || 'username') ? document : result;
         }
         else return `user with ID: ${result._id} exists`
-    });
+    }).catch(err => console.log('CUSTOM ERROR: ', err)
+    );
+
 
     return await reponse;
 }

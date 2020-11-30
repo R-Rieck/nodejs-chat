@@ -10,9 +10,6 @@ router.get('/', (req: Request, res: Response) => {
 
 
 router.post('/login', async (req: Request, res: Response) => {
-    console.log({ ...req.body });
-
-
     const isValid = await validateUser({ ...req.body });
 
     res.json({ isValid: isValid })
@@ -26,8 +23,6 @@ router.get('/usre/:userId', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
     const user: User = req.body;
-
-    console.log(user);
 
     const infoMessage = await addUser(user);
 
