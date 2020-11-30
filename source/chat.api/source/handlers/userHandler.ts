@@ -37,13 +37,13 @@ export const addUser = async (user: User): Promise<any> => {
     const reponse = userSchema.findOne({ username: user.username, email: user.email }).exec().then(async (result: mongoose.MongooseDocument | null) => {
         if (result === null) {
             const document = await dbUser.save().catch((err: mongoose.Error) => err);
-
-            return document.toString().includes('email' || 'username') ? document : result;
+            return document;
         }
         else return `user with ID: ${result._id} exists`
     }).catch(err => console.log('CUSTOM ERROR: ', err)
     );
 
+    console.log(await reponse);
 
     return await reponse;
 }
