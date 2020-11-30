@@ -12,6 +12,7 @@ import {
 
 type RegistrationViewProps = {
   onClick: () => void;
+  isLoggedIn: (state: boolean) => void;
 };
 
 type InputFormFields = {
@@ -28,7 +29,7 @@ type ValidationType = {
 };
 
 export const RegistrationView = (props: RegistrationViewProps) => {
-  const { userRegistration } = useUserContext();
+  const { userRegistration, isValid } = useUserContext();
   const [localUser, setLocalUser] = useState<InputFormFields>({
     username: "",
     email: "",
@@ -41,6 +42,8 @@ export const RegistrationView = (props: RegistrationViewProps) => {
     email: false,
     password: false,
   });
+
+  useEffect(() => props.isLoggedIn(isValid || false), [isValid]);
 
   useEffect(() => {
     if (isValidUsername(localUser.username) && !validation.username) {

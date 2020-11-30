@@ -8,6 +8,7 @@ import { User } from "../../types/user";
 
 type loginViewProps = {
   onClick: () => void;
+  isLoggedIn: (state: boolean) => void;
 };
 
 export const LoginView = (props: loginViewProps) => {
@@ -18,6 +19,10 @@ export const LoginView = (props: loginViewProps) => {
     email: "",
   });
   const [validInput, setValidInput] = useState<boolean>(true);
+
+  useEffect(() => {
+    props.isLoggedIn(isValid || false);
+  }, [isValid]);
 
   return !isValid ? (
     <div>

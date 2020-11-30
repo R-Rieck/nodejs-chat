@@ -1,5 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
+import helmet from 'helmet'
+import morgan from 'morgan'
 import 'dotenv/config'
 
 import routes from './router/index';
@@ -10,6 +12,8 @@ const app = express();
 InitializeDatabase();
 
 app.use(cors())
+    .use(helmet())
+    .use(morgan('dev'))
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
     .use('/users', routes.user)

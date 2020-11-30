@@ -3,7 +3,13 @@ import { LoginView } from "../../components/login/loginView";
 import { RegistrationView } from "../../components/login/registrationView";
 import anime from "animejs";
 
-export const Login = () => {
+type LoginPropType = {
+  isLoggedIn: (state: boolean) => void;
+};
+
+export const Login = (props: LoginPropType) => {
+  const { isLoggedIn } = props;
+
   const [playing, setPlaying] = useState<boolean>(false);
 
   const handleSideSwitch = () => {
@@ -28,10 +34,16 @@ export const Login = () => {
       <div className="login-inputbox-container">
         <div className="login-inputbox__inner" onClick={() => function () {}}>
           <div className="login-inputbox__front">
-            <LoginView onClick={() => handleSideSwitch()} />
+            <LoginView
+              onClick={() => handleSideSwitch()}
+              isLoggedIn={(state: boolean) => isLoggedIn(state)}
+            />
           </div>
           <div className="login-inputbox__back">
-            <RegistrationView onClick={() => handleSideSwitch()} />
+            <RegistrationView
+              onClick={() => handleSideSwitch()}
+              isLoggedIn={(state: boolean) => isLoggedIn(state)}
+            />
           </div>
         </div>
       </div>
