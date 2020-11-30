@@ -29,7 +29,7 @@ type ValidationType = {
 };
 
 export const RegistrationView = (props: RegistrationViewProps) => {
-  const { userRegistration, isValid } = useUserContext();
+  const { userRegistration, isValid, errorMessage } = useUserContext();
   const [localUser, setLocalUser] = useState<InputFormFields>({
     username: "",
     email: "",
@@ -42,6 +42,8 @@ export const RegistrationView = (props: RegistrationViewProps) => {
     email: false,
     password: false,
   });
+
+  useEffect(() => console.log(isValid, errorMessage), [isValid, errorMessage]);
 
   useEffect(() => props.isLoggedIn(isValid || false), [isValid]);
 
@@ -79,7 +81,9 @@ export const RegistrationView = (props: RegistrationViewProps) => {
   return (
     <div>
       <h2>Sign Up!</h2>
-
+      <p style={isValid ? { visibility: "hidden" } : { visibility: "visible" }}>
+        {errorMessage}
+      </p>
       <Textbox
         name="Username"
         icon={faUser}

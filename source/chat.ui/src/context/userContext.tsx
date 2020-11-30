@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { UserContext } from "../types/store";
 import { User } from "../types/user";
 
 const userContext = createContext<Partial<UserContext>>({
   user: undefined,
   isValid: false,
+  errorMessage: undefined,
 });
 
 export const useUserContext = () => {
@@ -15,8 +16,10 @@ export const StoreProvider = ({ children }: any) => {
   const [user, setUser] = useState<Partial<UserContext>>({
     user: undefined,
     isValid: undefined,
+    errorMessage: undefined,
   });
 
+  //fetching for user Registration
   const fetchRegistration = async (usr: User): Promise<boolean> => {
     const body = JSON.stringify({
       username: usr.username,
@@ -24,29 +27,47 @@ export const StoreProvider = ({ children }: any) => {
       password: usr.password,
     });
 
-    const result = await fetch("http://localhost:3001/users/", {
+    const result = fetch("http://localhost:3001/users/", {
       method: "POST",
       body: body,
       headers: new Headers({ "content-type": "application/json" }),
     })
       .then((result) => result.json())
       .then((result) => {
-        setUser({
-          user: {
-            username: result.username,
-            email: result.email,
-            password: result.password,
-          },
-          isValid: true,
-        });
+        console.log(result);
+        if (result.code === 11000) {
+          setUser({
+            user: undefined,
+            isValid: false,
+            errorMessage: `${
+              result.keyValue.email || result.keyValue.username
+            } is already in use`,
+          });
 
-        return true;
+          return false;
+        } else {
+          setUser({
+            user: {
+              username: result.username,
+              email: result.email,
+              password: result.password,
+            },
+            isValid: true,
+            errorMessage: undefined,
+          });
+
+          return true;
+        }
       })
-      .catch((err: Error) => false);
+      .catch((err: Error) => {
+        console.log(err);
+        return false;
+      });
 
-    return result;
+    return await result;
   };
 
+  //fetching for correct login data
   const fetchLogin = async (usr: User): Promise<boolean> => {
     const body = await JSON.stringify({
       login: usr.username || usr.email,
@@ -71,11 +92,22 @@ export const StoreProvider = ({ children }: any) => {
               password: usr.password,
             },
             isValid: true,
+            errorMessage: undefined,
           });
           return true;
-        } else return false;
+        } else {
+          setUser({
+            user: undefined,
+            isValid: false,
+            errorMessage: "Wrong Username or Password",
+          });
+          return false;
+        }
       })
-      .catch((err) => false);
+      .catch((err: Error) => {
+        console.log(err);
+        return false;
+      });
 
     return await result;
   };

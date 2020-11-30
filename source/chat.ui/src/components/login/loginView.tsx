@@ -12,7 +12,7 @@ type loginViewProps = {
 };
 
 export const LoginView = (props: loginViewProps) => {
-  const { setUser, isValid } = useUserContext();
+  const { setUser, isValid, errorMessage } = useUserContext();
   const [localUser, setLocalUser] = useState<User>({
     username: "",
     password: "",
@@ -32,7 +32,7 @@ export const LoginView = (props: loginViewProps) => {
           validInput ? { visibility: "hidden" } : { visibility: "visible" }
         }
       >
-        Wrong Username/Password!
+        {errorMessage}
       </p>
       <Textbox
         name="E-Mail or Username"
