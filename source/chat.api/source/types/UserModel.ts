@@ -4,6 +4,10 @@ export interface User {
     password: string;
     email: string;
     createdAt: Date;
+    profilePicture: {
+        contentType: string;
+        data: Buffer
+    }
 }
 
 export interface Message {

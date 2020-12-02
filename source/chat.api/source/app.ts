@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet'
 import morgan from 'morgan'
+import multer from 'multer'
 import 'dotenv/config'
 
 import routes from './router/index';

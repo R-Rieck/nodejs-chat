@@ -1,28 +1,33 @@
 import mongoose, { mongo } from 'mongoose';
 
+const requiredUniqueString = {
+    required: true,
+    unique: true,
+    type: String,
+}
+
+const requiredButNotUnique = {
+    required: true,
+    unique: false
+}
+
 const userSchema = new mongoose.Schema(
     {
         _id: mongoose.Schema.Types.ObjectId,
-        username: {
-            required: true,
-            unique: true,
-            type: String
-        },
+        username: requiredUniqueString,
+        email: requiredUniqueString,
         password: {
-            required: true,
-            unique: false,
-            type: String
-        },
-        email: {
-            required: true,
-            unique: true,
+            ...requiredButNotUnique,
             type: String
         },
         createdAt: {
-            required: true,
-            unique: false,
+            requiredButNotUnique,
             type: Date
-        }
+        },
+        profilePicture: {
+            data: Buffer,
+            contentType: String
+        },
     },
     {
         timestamps: true

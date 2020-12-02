@@ -3,10 +3,11 @@ import mongoose from 'mongoose';
 import userSchema from '../database/models/user';
 import user from "../database/models/user";
 import { comparePassword, hashPassword } from "../infrastructure/passwordEncrypter";
-import { json } from "body-parser";
+import fs from "fs";
+import path from "path";
 
 export const getUserById = async (id: string) => {
-    const user = userSchema.findById(id).exec().then(result => result)
+    const user = await userSchema.findById(id).exec().then(result => result)
 
     return await user;
 }
@@ -20,9 +21,11 @@ export const validateUser = async (credentials: { login: string, password: strin
     })
 
     if (userObj === null) return false;
+    if (await comparePassword(credentials.password, userObj && userObj.toJSON().password)) {
+        return userObj
+    }
 
-
-    return await comparePassword(credentials.password, userObj && userObj.toJSON().password);
+    return false;
 }
 
 export const addUser = async (user: User): Promise<any> => {
@@ -31,7 +34,11 @@ export const addUser = async (user: User): Promise<any> => {
         username: user.username,
         email: user.email,
         createdAt: new Date(),
-        password: await hashPassword(user.password)
+        password: await hashPassword(user.password),
+        profilePicture: {
+            data: fs.readFileSync(path.join(__dirname + '../../../uploads/placeholder/image-placeholder.png')),
+            contentType: 'image/png'
+        }
     })
 
     const reponse = userSchema.findOne({ username: user.username, email: user.email }).exec().then(async (result: mongoose.MongooseDocument | null) => {
@@ -46,6 +53,30 @@ export const addUser = async (user: User): Promise<any> => {
     console.log(await reponse);
 
     return await reponse;
+}
+
+export const updateAvatar = (img: Express.Multer.File, id: string) => {
+    const data = fs.readFileSync(img.path);
+    console.log(data);
+
+    const dbUser = {
+        data,
+        contentType: 'image/png'
+    }
+        ;
+
+    console.log(dbUser);
+
+
+    const response = userSchema.updateOne({ _id: id }, { profilePicture: dbUser }).exec().then(result => {
+        if (result.n > 0) {
+            return `user with ID: ${id} updated`
+        }
+        else
+            return `cannot find user with ID: ${id}`
+    })
+
+    return response
 }
 
 export const deleteUser = async (id: string): Promise<any> => {
