@@ -17,6 +17,7 @@ export const LoginView = (props: loginViewProps) => {
     username: "",
     password: "",
     email: "",
+    profilePicture: undefined
   });
   const [validInput, setValidInput] = useState<boolean>(true);
 

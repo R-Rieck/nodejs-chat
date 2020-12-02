@@ -75,6 +75,7 @@ export const RegistrationView = (props: RegistrationViewProps) => {
         username: localUser.username,
         email: localUser.email,
         password: localUser.password,
+        profilePicture: undefined
       });
   };
 

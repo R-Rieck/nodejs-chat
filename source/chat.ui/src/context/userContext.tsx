@@ -19,6 +19,18 @@ export const StoreProvider = ({ children }: any) => {
     errorMessage: undefined,
   });
 
+  //DEBUG
+  // const [user, setUser] = useState<Partial<UserContext>>({
+  //   user: {
+  //     email: "testEmail@gmx.de",
+  //     password: "test",
+  //     username: "testUsername",
+  //     profilePicture: undefined
+  //   },
+  //   isValid: true,
+  //   errorMessage: undefined,
+  // });
+
   //fetching for user Registration
   const fetchRegistration = async (usr: User): Promise<boolean> => {
     const body = JSON.stringify({
@@ -34,7 +46,6 @@ export const StoreProvider = ({ children }: any) => {
     })
       .then((result) => result.json())
       .then((result) => {
-        console.log(result);
         if (result.code === 11000) {
           setUser({
             user: undefined,
@@ -51,6 +62,7 @@ export const StoreProvider = ({ children }: any) => {
               username: result.username,
               email: result.email,
               password: result.password,
+              profilePicture: result.profilePicture
             },
             isValid: true,
             errorMessage: undefined,
@@ -84,12 +96,14 @@ export const StoreProvider = ({ children }: any) => {
     })
       .then((result) => result.json())
       .then((result) => {
-        if (result.isValid) {
+        console.log(result);
+        if (result !== false) {
           setUser({
             user: {
-              username: usr.username,
-              email: usr.email,
-              password: usr.password,
+              username: result.username,
+              email: result.email,
+              password: result.password,
+              profilePicture: result.profilePicture
             },
             isValid: true,
             errorMessage: undefined,

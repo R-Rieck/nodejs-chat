@@ -11,10 +11,12 @@
 
 .login-inputbox-container {
   display: flex;
+  zoom: 0.8;
+  transform: scale(0.8);
   flex-direction: column;
   align-items: center;
   margin: 0 10rem;
-  min-width: 30rem;
+  min-width: 25rem;
   height: 45rem;
   background-color: transparent;
   perspective: 1400px;
@@ -63,6 +65,12 @@
     background: url("../images/login-background.jpg") left 90% bottom 30% /
       cover;
     justify-content: center;
+  }
+
+  .login-inputbox-container {
+    min-width: 30rem;
+    zoom: 1;
+    transform: scale(1);
   }
 }
 
