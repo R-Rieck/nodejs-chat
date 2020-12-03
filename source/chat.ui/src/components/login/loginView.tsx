@@ -14,10 +14,12 @@ type loginViewProps = {
 export const LoginView = (props: loginViewProps) => {
   const { functions, isValid, errorMessage } = useUserContext();
   const [localUser, setLocalUser] = useState<User>({
+    _id: "",
     username: "",
     password: "",
     email: "",
     profilePicture: {},
+    contacts: undefined
   });
   const [validInput, setValidInput] = useState<boolean>(true);
 

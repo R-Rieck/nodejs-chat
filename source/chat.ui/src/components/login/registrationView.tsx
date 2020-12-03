@@ -38,10 +38,12 @@ export const RegistrationView = (props: RegistrationViewProps) => {
       isValidInput.password
     )
       functions.userRegistration({
+        _id: "",
         username: localUser.username,
         email: localUser.email,
         password: localUser.password,
         profilePicture: {},
+        contacts: undefined
       });
   };
 

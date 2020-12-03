@@ -1,7 +1,7 @@
 import multer from 'multer'
 import { Request, Response, Router } from 'express';
 import { User } from '../../types/UserModel';
-import { addUser, deleteUser, getUserById, updateUser, validateUser, updateAvatar } from '../../handlers/userHandler';
+import { addUser, deleteUser, getUserById, updateUser, validateUser, updateAvatar, updateContacts, getUserByName } from '../../handlers/userHandler';
 
 const router = Router();
 const storage = multer.diskStorage({
@@ -18,10 +18,14 @@ router.get('/', (req: Request, res: Response) => {
     res.send('You can\'t get all users. Try to retrieve with as single userId instead.')
 })
 
+router.post('/getUserByName', async (req: Request, res: Response) => {
+    const user = await getUserByName({...req.body});
+
+    res.send(user)
+})
 
 router.post('/login', async (req: Request, res: Response) => {
     const user = await validateUser({ ...req.body });
-    console.log(user);
     
     res.json(user)
 })
@@ -31,6 +35,7 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
 
     res.send(user)
 })
+
 
 router.post('/', async (req: Request, res: Response) => {
     const user: User = req.body;
@@ -45,6 +50,16 @@ router.post('/uploadAvatar/:userId', upload.single('profilePicture'), async (req
 
     res.send(infoMessage)
 })
+
+router.post('/add/:userId'), async (req: Request, res: Response) => {
+    console.log('hallo')
+    console.log('userid', req.params.userId)
+    console.log('contactid', req.body)
+
+    const infoMessage = updateContacts(req.params.userId, { ...req.body });
+    
+    res.send(infoMessage)
+}   
 
 router.delete('/:userId', async (req: Request, res: Response) => {
     const infoMessage = await deleteUser(req.params.userId);

@@ -12,6 +12,12 @@ export const getUserById = async (id: string) => {
     return await user;
 }
 
+export const getUserByName = async (body: {username: string}) => {
+    const user = await userSchema.findOne({username: body.username}).exec().then(result => result)
+    
+    return await user === null ? false : user;  
+}
+
 export const validateUser = async (credentials: { login: string, password: string }) => {
     const userObj = await userSchema.findOne({
         $or: [
@@ -79,17 +85,24 @@ export const updateAvatar = (img: Express.Multer.File, id: string) => {
     return response
 }
 
-export const deleteUser = async (id: string): Promise<any> => {
-    const reponse = userSchema.findById(id).exec().then(result => {
-        if (result !== null) {
-            result.deleteOne();
-            return `user with ID: ${result._id} deleted`
+export const updateContacts = async (id: string, contactId: string) => {
+    const user = userSchema.findById({ contactId }).exec().then(result => {
+        if (result !== null)    
+            console.log('result: ', result);
+            
+    })
+
+    const response = userSchema.updateOne({ _id: id }, { ...user }).exec().then(result => {
+        if (result.n > 0) {
+            return `user with ID: ${id} updated`
         }
         else
             return `cannot find user with ID: ${id}`
     })
-    return await reponse;
+
+    return await response;
 }
+
 
 export const updateUser = async (user: User, id: string): Promise<any> => {
     const response = userSchema.updateOne({ _id: id }, { ...user }).exec().then(result => {
@@ -101,4 +114,16 @@ export const updateUser = async (user: User, id: string): Promise<any> => {
     })
 
     return await response;
+}
+
+export const deleteUser = async (id: string): Promise<any> => {
+    const reponse = userSchema.findById(id).exec().then(result => {
+        if (result !== null) {
+            result.deleteOne();
+            return `user with ID: ${result._id} deleted`
+        }
+        else
+            return `cannot find user with ID: ${id}`
+    })
+    return await reponse;
 }

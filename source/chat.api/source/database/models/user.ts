@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema(
             data: Buffer,
             contentType: String
         },
+        contacts: {
+            type: Array
+        }
     },
     {
         timestamps: true
