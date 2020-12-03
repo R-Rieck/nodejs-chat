@@ -4,12 +4,7 @@ import { Passwordbox } from "../passwordbox";
 import { Button } from "../button";
 import { faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useUserContext } from "../../context/userContext";
-import {
-  isEqualPassword,
-  isValidEmail,
-  isValidUsername,
-  useValidation,
-} from "../../infrastructure/validation";
+import { useValidation } from "../../infrastructure/validation";
 
 type RegistrationViewProps = {
   onClick: () => void;
@@ -23,12 +18,6 @@ type InputFormFields = {
   passwordRepeated: string;
 };
 
-// type ValidationType = {
-//   username: boolean;
-//   email: boolean;
-//   password: boolean;
-// };
-
 export const RegistrationView = (props: RegistrationViewProps) => {
   const { functions, isValid, errorMessage } = useUserContext();
   const [localUser, setLocalUser] = useState<InputFormFields>({
@@ -37,7 +26,7 @@ export const RegistrationView = (props: RegistrationViewProps) => {
     password: "",
     passwordRepeated: "",
   });
-  const isValidInput = useValidation(localUser)
+  const isValidInput = useValidation(localUser);
 
   useEffect(() => props.isLoggedIn(isValid || false), [isValid]);
 

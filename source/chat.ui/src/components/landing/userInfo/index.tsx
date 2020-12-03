@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { useUserContext } from "../../../context/userContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "../../image";
 
+type modalsType = {
+  addContact: boolean,
+  settings: boolean
+}
+
 export const UserInfo = () => {
   const { user } = useUserContext();
+  const [modalsVisiblity, setModalsVisibility] = useState<modalsType>({
+    addContact: false,
+    settings: false,
+  })
 
   return (
     <div className="userinfo__container">
