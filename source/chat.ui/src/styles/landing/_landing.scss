@@ -1,1 +1,14 @@
-@import './components/userInfo'
+@import "./components/userInfo";
+@import "./components/contacts";
+
+.landing-page__container {
+  background-image: url("../images/chat-backgorund.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+
+  .landing-page-user-contact__container {
+    
+    min-width: 400px;
+    max-width: 500px;
+  }
+}

@@ -1,33 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useUserContext } from "../../../context/userContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { Avatar } from "../../image";
 
 export const UserInfo = () => {
   const { user } = useUserContext();
-  const [image, setImage] = useState<Buffer>();
 
-  useEffect(() => {
-    const buffer: Buffer = Buffer.from(
-      (user && user.profilePicture?.data.data) || []
-    );
-
-    setImage(buffer);
-  }, [user]);
-
-  useEffect(() => console.log(image), [image]);
   return (
-    <div className="userinfo-container">
+    <div className="userinfo__container">
       <div className="userinfo-info-display__container">
-        <img
-          src={`data:${
-            user && user.profilePicture?.data.contentType
-          };base64,${image?.toString("base64")}`}
-          alt="lul"
-        />
-        <h2>{user && user.username}</h2>
+        <Avatar profilePicture={user.profilePicture} />
+        <h2>{user.username}</h2>
       </div>
-      <FontAwesomeIcon icon={faCog} size="2x" />
+      <div className="userinfo-action-display__container">
+        <FontAwesomeIcon icon={faUserPlus} size="2x" />
+        <FontAwesomeIcon icon={faCog} size="2x" />
+      </div>
     </div>
   );
 };

@@ -4,6 +4,8 @@ export type UserContext = {
     user: User,
     isValid: boolean | undefined,
     errorMessage: string | undefined
-    setUser: (user: User) => Promise<boolean>;
-    userRegistration: (user: User) => Promise<boolean>
+    functions: Partial<{
+        setUser: (user: User) => Promise<boolean>;
+        userRegistration: (user: User) => Promise<boolean>
+    }>
 }

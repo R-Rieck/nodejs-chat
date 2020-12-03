@@ -1,11 +1,19 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "../types/store";
 import { User } from "../types/user";
 
-const userContext = createContext<Partial<UserContext>>({
-  user: undefined,
+const defaultUser: User = {
+  username: "",
+  email: "",
+  password: "",
+  profilePicture: {},
+};
+
+const userContext = createContext<UserContext>({
+  user: defaultUser,
   isValid: false,
   errorMessage: undefined,
+  functions: {},
 });
 
 export const useUserContext = () => {
@@ -13,23 +21,24 @@ export const useUserContext = () => {
 };
 
 export const StoreProvider = ({ children }: any) => {
-  const [user, setUser] = useState<Partial<UserContext>>({
-    user: undefined,
+  const [user, setUser] = useState<UserContext>({
+    user: defaultUser,
     isValid: undefined,
     errorMessage: undefined,
+    functions: {},
   });
 
-  //DEBUG
-  // const [user, setUser] = useState<Partial<UserContext>>({
-  //   user: {
-  //     email: "testEmail@gmx.de",
-  //     password: "test",
-  //     username: "testUsername",
-  //     profilePicture: undefined
-  //   },
-  //   isValid: true,
-  //   errorMessage: undefined,
-  // });
+  const changeUser = (userCtx: Partial<UserContext>) => {
+    console.log("usr: ", userCtx);
+    setUser({
+      user: userCtx.user || defaultUser,
+      errorMessage: userCtx.errorMessage || undefined,
+      isValid: userCtx.isValid || false,
+      functions: { ...user.functions } || {},
+    });
+  };
+
+  useEffect(() => console.log(user), [user]);
 
   //fetching for user Registration
   const fetchRegistration = async (usr: User): Promise<boolean> => {
@@ -47,27 +56,16 @@ export const StoreProvider = ({ children }: any) => {
       .then((result) => result.json())
       .then((result) => {
         if (result.code === 11000) {
-          setUser({
-            user: undefined,
-            isValid: false,
+          console.log(result);
+
+          changeUser({
             errorMessage: `${
               result.keyValue.email || result.keyValue.username
             } is already in use`,
           });
-
           return false;
         } else {
-          setUser({
-            user: {
-              username: result.username,
-              email: result.email,
-              password: result.password,
-              profilePicture: result.profilePicture
-            },
-            isValid: true,
-            errorMessage: undefined,
-          });
-
+          changeUser({ user: result, isValid: true });
           return true;
         }
       })
@@ -96,25 +94,11 @@ export const StoreProvider = ({ children }: any) => {
     })
       .then((result) => result.json())
       .then((result) => {
-        console.log(result);
         if (result !== false) {
-          setUser({
-            user: {
-              username: result.username,
-              email: result.email,
-              password: result.password,
-              profilePicture: result.profilePicture
-            },
-            isValid: true,
-            errorMessage: undefined,
-          });
+          changeUser({ user: result, isValid: true });
           return true;
         } else {
-          setUser({
-            user: undefined,
-            isValid: false,
-            errorMessage: "Wrong Username or Password",
-          });
+          changeUser({ errorMessage: "Wrong Username or Password" });
           return false;
         }
       })
@@ -130,8 +114,10 @@ export const StoreProvider = ({ children }: any) => {
     <userContext.Provider
       value={{
         ...user,
-        setUser: fetchLogin,
-        userRegistration: fetchRegistration,
+        functions: {
+          setUser: fetchLogin,
+          userRegistration: fetchRegistration,
+        },
       }}
     >
       {children}

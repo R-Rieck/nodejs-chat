@@ -12,12 +12,12 @@ type loginViewProps = {
 };
 
 export const LoginView = (props: loginViewProps) => {
-  const { setUser, isValid, errorMessage } = useUserContext();
+  const { functions, isValid, errorMessage } = useUserContext();
   const [localUser, setLocalUser] = useState<User>({
     username: "",
     password: "",
     email: "",
-    profilePicture: undefined
+    profilePicture: {},
   });
   const [validInput, setValidInput] = useState<boolean>(true);
 
@@ -63,8 +63,9 @@ export const LoginView = (props: loginViewProps) => {
           padding: "0.8rem 8rem",
         }}
         onClick={() =>
-          setUser !== undefined &&
-          setUser(localUser).then((result) => setValidInput(result))
+          functions &&
+          functions.setUser &&
+          functions.setUser(localUser).then((result) => setValidInput(result))
         }
       />
       <Button

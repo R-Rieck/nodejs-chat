@@ -8,6 +8,7 @@ import {
   isEqualPassword,
   isValidEmail,
   isValidUsername,
+  useValidation,
 } from "../../infrastructure/validation";
 
 type RegistrationViewProps = {
@@ -22,60 +23,36 @@ type InputFormFields = {
   passwordRepeated: string;
 };
 
-type ValidationType = {
-  username: boolean;
-  email: boolean;
-  password: boolean;
-};
+// type ValidationType = {
+//   username: boolean;
+//   email: boolean;
+//   password: boolean;
+// };
 
 export const RegistrationView = (props: RegistrationViewProps) => {
-  const { userRegistration, isValid, errorMessage } = useUserContext();
+  const { functions, isValid, errorMessage } = useUserContext();
   const [localUser, setLocalUser] = useState<InputFormFields>({
     username: "",
     email: "",
     password: "",
     passwordRepeated: "",
   });
-
-  const [validation, setValidation] = useState<ValidationType>({
-    username: false,
-    email: false,
-    password: false,
-  });
-
-  useEffect(() => console.log(isValid, errorMessage), [isValid, errorMessage]);
+  const isValidInput = useValidation(localUser)
 
   useEffect(() => props.isLoggedIn(isValid || false), [isValid]);
 
-  useEffect(() => {
-    if (isValidUsername(localUser.username) && !validation.username) {
-      setValidation({ ...validation, username: true });
-    }
-
-    if (isValidEmail(localUser.email) && !validation.email) {
-      setValidation({ ...validation, email: true });
-    }
-
-    if (
-      isEqualPassword(localUser.password, localUser.passwordRepeated) &&
-      !validation.password
-    ) {
-      setValidation({ ...validation, password: true });
-    }
-  }, [localUser]);
-
   const handleRegistration = () => {
     if (
-      userRegistration &&
-      validation.username &&
-      validation.email &&
-      validation.password
+      functions.userRegistration &&
+      isValidInput.username &&
+      isValidInput.email &&
+      isValidInput.password
     )
-      userRegistration({
+      functions.userRegistration({
         username: localUser.username,
         email: localUser.email,
         password: localUser.password,
-        profilePicture: undefined
+        profilePicture: {},
       });
   };
 
@@ -88,7 +65,7 @@ export const RegistrationView = (props: RegistrationViewProps) => {
       <Textbox
         name="Username"
         icon={faUser}
-        isValid={validation.username}
+        isValid={isValidInput.username}
         inputType={InputType.username}
         onChange={(text: string) =>
           setLocalUser({ ...localUser, username: text })
@@ -96,7 +73,7 @@ export const RegistrationView = (props: RegistrationViewProps) => {
       />
       <Textbox
         name="E-Mail"
-        isValid={validation.email}
+        isValid={isValidInput.email}
         icon={faEnvelope}
         inputType={InputType.email}
         onChange={(text: string) => setLocalUser({ ...localUser, email: text })}
@@ -106,14 +83,14 @@ export const RegistrationView = (props: RegistrationViewProps) => {
         onChange={(text: string) =>
           setLocalUser({ ...localUser, password: text })
         }
-        isValid={validation.password}
+        isValid={isValidInput.password}
       />
       <Passwordbox
         name="Repeat Password"
         onChange={(text: string) =>
           setLocalUser({ ...localUser, passwordRepeated: text })
         }
-        isValid={validation.password}
+        isValid={isValidInput.password}
       />
 
       <Button
