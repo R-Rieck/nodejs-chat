@@ -1,6 +1,8 @@
 @import "./components/userInfo";
 @import "./components/contacts";
 @import "./components/currentChatUser";
+@import "./components/chatWindow";
+@import "./components/messageView";
 
 .landing-page__container {
   background-image: url("../images/chat-backgorund.jpg");
@@ -15,5 +17,6 @@
 
   .landing-page-user-chat__container {
     width: 100%;
+    height: 100%;
   }
 }
