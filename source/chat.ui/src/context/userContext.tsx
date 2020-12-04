@@ -16,6 +16,7 @@ const userContext = createContext<UserContext>({
   errorMessage: undefined,
   functions: {},
   suggestedUser: undefined,
+  currentChatUser: undefined,
 });
 
 export const useUserContext = () => {
@@ -29,13 +30,15 @@ export const StoreProvider = ({ children }: any) => {
     errorMessage: undefined,
     functions: {},
     suggestedUser: undefined,
+    currentChatUser: undefined,
   });
 
   const changeUser = (userCtx: Partial<UserContext>) => {
     setUser({
-      user: userCtx.user || {...user.user},
+      user: userCtx.user || { ...user.user },
       errorMessage: userCtx.errorMessage || undefined,
       isValid: userCtx.isValid || false,
+      currentChatUser: userCtx.currentChatUser || undefined,
       functions: { ...user.functions } || {},
       suggestedUser: userCtx.suggestedUser || undefined,
     });
@@ -132,29 +135,50 @@ export const StoreProvider = ({ children }: any) => {
 
   const fetchAddContact = async (id: string) => {
     const userId = user.user._id;
-    
-    const result = fetch(
-      `http://localhost:3001/users/contacts/${userId}`,
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        // body: JSON.stringify({ _id: id }),
-      }
-    )
+
+    const result = fetch(`http://localhost:3001/users/add/${userId}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ _id: id }),
+    })
       .then((result) => result.json())
       .then((result) => {
         if (result !== false)
           changeUser({
             ...user,
-            user: { ...user.user, contacts: result },
+            user: { ...user.user, contacts: result.contacts },
           });
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
 
     return await result;
+  };
+
+  const fetchGetContactList = async (): Promise<boolean> => {
+    const userId = user.user._id;
+
+    const result = fetch(`http://localhost:3001/users/getContacts/${userId}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        changeUser({ ...user, user: { ...user.user, contacts: result } });
+      });
+
+    return await false;
+  };
+
+  const setCurrentChatUser = (user: User) => {
+    changeUser({
+      currentChatUser: user,
+    });
   };
 
   return (
@@ -166,6 +190,8 @@ export const StoreProvider = ({ children }: any) => {
           userRegistration: fetchRegistration,
           getContactByName: fetchContact,
           addContact: fetchAddContact,
+          getContacts: fetchGetContactList,
+          setCurrentChatUser: setCurrentChatUser,
         },
       }}
     >

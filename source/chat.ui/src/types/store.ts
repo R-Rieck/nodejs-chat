@@ -5,10 +5,13 @@ export type UserContext = {
     isValid: boolean | undefined,
     errorMessage: string | undefined,
     suggestedUser: User | undefined,
+    currentChatUser: User | undefined,
     functions: Partial<{
         setUser: (user: User) => Promise<boolean>;
         userRegistration: (user: User) => Promise<boolean>;
         getContactByName: (name: string) => void;
         addContact: (name: string) => void;
+        getContacts: () => Promise<boolean>;
+        setCurrentChatUser: (user: User) => void
     }>
 }

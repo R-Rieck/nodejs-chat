@@ -1,6 +1,7 @@
 import React from "react";
 import { UserInfo } from "../../components/landing/userInfo/index";
 import { Contacts } from "../../components/landing/contacts/index";
+import { CurrentUserInfo } from "../../components/landing/currentChatUser/index";
 
 export const Landing = () => {
   return (
@@ -8,6 +9,9 @@ export const Landing = () => {
       <div className="landing-page-user-contact__container">
         <UserInfo />
         <Contacts />
+      </div>
+      <div className="landing-page-user-chat__container">
+        <CurrentUserInfo />
       </div>
     </div>
   );

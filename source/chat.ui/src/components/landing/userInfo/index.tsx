@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useUserContext } from "../../../context/userContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "../../image";
 import { CustomModal } from "../../modal";
-import { set } from "animejs";
 
 type modalsType = {
   addContact: boolean;
@@ -18,8 +17,6 @@ export const UserInfo = () => {
     settings: false,
   });
   const [contactSearch, setContactSearch] = useState<string>("");
-
-  useEffect(() => console.log(suggestedUser), [suggestedUser]);
 
   return (
     <div className="userinfo__container">

@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema(
             type: Date
         },
         profilePicture: {
-            data: Buffer,
+            data: String,
             contentType: String
         },
         contacts: {

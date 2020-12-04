@@ -1,25 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { ProfilePicture } from "../types/user";
-import { convertBufferFrom } from "../infrastructure/imageConverter";
 
 type AvatarPropType = {
   profilePicture: Partial<ProfilePicture>;
 };
 
+type imageType = {
+  image: string;
+  contentType: string;
+};
+
 export const Avatar = (props: AvatarPropType) => {
   const { profilePicture } = props;
-  const [image, setImage] = useState<Buffer>();
+  const [image, setImage] = useState<imageType>();
 
-    useEffect(() => {
-        setImage(convertBufferFrom(profilePicture))
-    }, [profilePicture]);
+  useEffect(() => {
+    if (
+      profilePicture.contentType !== undefined &&
+      profilePicture.data !== undefined
+    )
+      setImage({
+        image: profilePicture.data,
+        contentType: profilePicture.contentType,
+      });
+  }, [profilePicture]);
 
   return (
-    <img
-      src={`data:${profilePicture?.data?.contentType};base64,${image?.toString(
-        "base64"
-      )}`}
-      alt="lul"
-    />
+    <img src={`data:${image?.contentType};base64,${image?.image}`} alt="lul" />
   );
 };

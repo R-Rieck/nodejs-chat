@@ -12,10 +12,22 @@ export const getUserById = async (id: string) => {
     return await user;
 }
 
-export const getUserByName = async (body: {username: string}) => {
-    const user = await userSchema.findOne({username: body.username}).exec().then(result => result)
-    
-    return await user === null ? false : user;  
+export const getUserByName = async (body: { username: string }) => {
+    const user = await userSchema.findOne({ username: body.username }).exec().then(result => result)
+
+    return await user === null ? false : user;
+}
+
+export const getContacts = async (id: string) => {
+    const ids = await userSchema.findById(id).select("contacts").exec().then(result => result)
+
+    if (ids !== null) {
+        const contacts = await userSchema.find(ids)
+
+        return await contacts;
+    }
+
+    return false;
 }
 
 export const validateUser = async (credentials: { login: string, password: string }) => {
@@ -28,6 +40,7 @@ export const validateUser = async (credentials: { login: string, password: strin
 
     if (userObj === null) return false;
     if (await comparePassword(credentials.password, userObj && userObj.toJSON().password)) {
+        
         return userObj
     }
 
@@ -42,7 +55,9 @@ export const addUser = async (user: User): Promise<any> => {
         createdAt: new Date(),
         password: await hashPassword(user.password),
         profilePicture: {
-            data: fs.readFileSync(path.join(__dirname + '../../../uploads/placeholder/image-placeholder.png')),
+            data: fs.readFileSync(path.join(__dirname + '../../../uploads/placeholder/image-placeholder.png'), {
+                encoding: 'base64'
+            }),
             contentType: 'image/png'
         }
     })
@@ -62,8 +77,7 @@ export const addUser = async (user: User): Promise<any> => {
 }
 
 export const updateAvatar = (img: Express.Multer.File, id: string) => {
-    const data = fs.readFileSync(img.path);
-    console.log(data);
+    const data = fs.readFileSync(img.path, {encoding: 'base64'});
 
     const dbUser = {
         data,
@@ -85,22 +99,33 @@ export const updateAvatar = (img: Express.Multer.File, id: string) => {
     return response
 }
 
-export const updateContacts = async (id: string, contactId: string) => {
-    const user = userSchema.findById({ contactId }).exec().then(result => {
-        if (result !== null)    
-            console.log('result: ', result);
-            
-    })
-
-    const response = userSchema.updateOne({ _id: id }, { ...user }).exec().then(result => {
-        if (result.n > 0) {
-            return `user with ID: ${id} updated`
+export const updateContacts = async (id: string, contact: any) => {
+    const user = await userSchema.findById({ _id: contact._id }).exec().then(result => {
+        if (result !== null) {
+            return result;
         }
-        else
-            return `cannot find user with ID: ${id}`
+        else return false;
     })
 
-    return await response;
+    if (user !== false) {
+        const response = await userSchema.updateOne({ _id: id }, { $push: { contacts: user} }).exec().then(result => {
+            if (result.n > 0)
+                return true;
+            else
+                return false;
+        })
+
+        if (response !== false) {
+            const updatedUser = await userSchema.findById(id).select('contacts').exec().then(result => result)
+
+            if (updatedUser !== null)
+                return updatedUser;
+        }
+
+        else return false;
+    }
+
+    return false;
 }
 
 

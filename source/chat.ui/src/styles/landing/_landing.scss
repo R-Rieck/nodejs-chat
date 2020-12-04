@@ -1,14 +1,19 @@
 @import "./components/userInfo";
 @import "./components/contacts";
+@import "./components/currentChatUser";
 
 .landing-page__container {
   background-image: url("../images/chat-backgorund.jpg");
   background-position: center;
   background-repeat: no-repeat;
+  display: flex;
 
   .landing-page-user-contact__container {
-    
     min-width: 400px;
     max-width: 500px;
+  }
+
+  .landing-page-user-chat__container {
+    width: 100%;
   }
 }

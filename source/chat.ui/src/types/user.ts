@@ -8,9 +8,7 @@ export type User = {
 }
 
 export type ProfilePicture = {
-    data: {
-        type: string;
-        data: number[];
-        contentType: string
-    }
+    type: string;
+    data: string;
+    contentType: string
 }
