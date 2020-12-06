@@ -23,7 +23,7 @@ export const CurrentUserInfo = () => {
           </div>
           <div className="current-user-info-action__container">
             <FontAwesomeIcon icon={faSync} size="2x" />
-          </div>
+          </div>  
         </div>
       ) : (
         <div style={{height:'60px'}}></div>
