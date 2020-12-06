@@ -3,7 +3,8 @@ import { useUserContext } from "../../../context/userContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "../../image";
-import { CustomModal } from "../../modal";
+import { AddContactModal } from "./modals/addContactModal";
+import { SettingsModals } from "./modals/settingsModal";
 
 type modalsType = {
   addContact: boolean;
@@ -11,12 +12,11 @@ type modalsType = {
 };
 
 export const UserInfo = () => {
-  const { user, suggestedUser, functions } = useUserContext();
+  const { user } = useUserContext();
   const [modalsVisiblity, setModalsVisibility] = useState<modalsType>({
     addContact: false,
     settings: false,
   });
-  const [contactSearch, setContactSearch] = useState<string>("");
 
   return (
     <div className="userinfo__container">
@@ -32,70 +32,25 @@ export const UserInfo = () => {
             setModalsVisibility({ ...modalsVisiblity, addContact: true })
           }
         />
-        <CustomModal
-          title="Add Contact"
-          isOpen={modalsVisiblity.addContact}
-          setIsOpen={() =>
-            setModalsVisibility({
-              ...modalsVisiblity,
-              addContact: !modalsVisiblity.addContact,
-            })
+        <AddContactModal
+          visiblity={modalsVisiblity.addContact}
+          setVisibility={() =>
+            setModalsVisibility({ ...modalsVisiblity, addContact: false })
           }
-        >
-          <div className="modal-addcontact__container">
-            <h2>ADD CONTACT</h2>
-            <div className="modal-addcontact-action__container">
-              <input
-                type="text"
-                name="input"
-                id=""
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setContactSearch(e.target.value)
-                }
-              />
-              <button
-                className="action-button-positiv"
-                onClick={() =>
-                  functions &&
-                  functions.getContactByName &&
-                  functions.getContactByName(contactSearch)
-                }
-              >
-                search
-              </button>
-            </div>
-            <div
-              className="modal-addcontact-display__container"
-              style={
-                suggestedUser === undefined
-                  ? { visibility: "hidden" }
-                  : { visibility: "visible" }
-              }
-            >
-              {suggestedUser !== undefined ? (
-                <>
-                  <>
-                    <Avatar profilePicture={suggestedUser.profilePicture} />
-                    <h3>{suggestedUser.username}</h3>
-                  </>
-                  <button
-                    className="action-button-positiv"
-                    onClick={() =>
-                      functions &&
-                      functions.addContact &&
-                      functions.addContact(suggestedUser._id)
-                    }
-                  >
-                    Add
-                  </button>
-                </>
-              ) : (
-                <></>
-              )}
-            </div>
-          </div>
-        </CustomModal>
-        <FontAwesomeIcon icon={faCog} size="2x" />
+        />
+        <FontAwesomeIcon
+          icon={faCog}
+          size="2x"
+          onClick={() =>
+            setModalsVisibility({ ...modalsVisiblity, settings: true })
+          }
+        />
+        <SettingsModals
+          visiblity={modalsVisiblity.settings}
+          setVisibility={() =>
+            setModalsVisibility({ ...modalsVisiblity, settings: false })
+          }
+        />
       </div>
     </div>
   );
