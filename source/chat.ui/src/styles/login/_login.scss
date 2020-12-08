@@ -48,6 +48,13 @@
   border-radius: 5px;
   justify-content: center;
   backface-visibility: hidden;
+
+  > div > div:last-child {
+    padding: 5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .login-inputbox__back {

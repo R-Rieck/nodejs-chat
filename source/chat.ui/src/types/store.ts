@@ -6,6 +6,7 @@ export type UserContext = {
     errorMessage: string | undefined,
     suggestedUser: User | undefined,
     currentChatUser: User | undefined,
+    isFetching: boolean;
     functions: Partial<{
         setUser: (user: User) => Promise<boolean>;
         userRegistration: (user: User) => Promise<boolean>;

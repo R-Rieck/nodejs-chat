@@ -5,6 +5,7 @@ import { Button } from "../button";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { useUserContext } from "../../context/userContext";
 import { User } from "../../types/user";
+import { LoadingSpinner } from "../loadingSpinner";
 
 type loginViewProps = {
   onClick: () => void;
@@ -12,14 +13,14 @@ type loginViewProps = {
 };
 
 export const LoginView = (props: loginViewProps) => {
-  const { functions, isValid, errorMessage } = useUserContext();
+  const { functions, isValid, errorMessage, isFetching } = useUserContext();
   const [localUser, setLocalUser] = useState<User>({
     _id: "",
     username: "",
     password: "",
     email: "",
     profilePicture: {},
-    contacts: undefined
+    contacts: undefined,
   });
   const [validInput, setValidInput] = useState<boolean>(true);
 
@@ -61,8 +62,8 @@ export const LoginView = (props: loginViewProps) => {
           background: "linear-gradient(to left, #ba1865, #e02da4)",
           color: "white",
           fontSize: "1.1rem",
-          margin: "1.5rem 0",
-          padding: "0.8rem 8rem",
+          margin: "3rem 0",
+          padding: "0.7rem 8rem",
         }}
         onClick={() =>
           functions &&
@@ -83,8 +84,10 @@ export const LoginView = (props: loginViewProps) => {
         }}
         onClick={props.onClick}
       />
+
+      {isFetching ? <LoadingSpinner /> : <div></div>}
     </div>
   ) : (
-    <div>Logged in</div>
+    <></>
   );
 };

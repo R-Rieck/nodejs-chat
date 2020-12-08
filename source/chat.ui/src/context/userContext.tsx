@@ -17,6 +17,7 @@ const userContext = createContext<UserContext>({
   functions: {},
   suggestedUser: undefined,
   currentChatUser: undefined,
+  isFetching: false
 });
 
 export const useUserContext = () => {
@@ -31,6 +32,7 @@ export const StoreProvider = ({ children }: any) => {
     functions: {},
     suggestedUser: undefined,
     currentChatUser: undefined,
+    isFetching: false
   });
 
   const changeUser = (userCtx: Partial<UserContext>) => {
@@ -41,6 +43,7 @@ export const StoreProvider = ({ children }: any) => {
       currentChatUser: userCtx.currentChatUser || undefined,
       functions: { ...user.functions } || {},
       suggestedUser: userCtx.suggestedUser || undefined,
+      isFetching: false
     });
   };
 
@@ -81,6 +84,8 @@ export const StoreProvider = ({ children }: any) => {
 
   //fetching for correct login data
   const fetchLogin = async (usr: User): Promise<boolean> => {
+    setUser({...user, isFetching: true})
+
     const body = await JSON.stringify({
       login: usr.username || usr.email,
       password: usr.password,
@@ -182,6 +187,8 @@ export const StoreProvider = ({ children }: any) => {
   };
 
   const updateUser = (usr: Partial<User>) => {
+    console.log(usr);
+
     fetch(`http://localhost:3001/users/update/${user.user._id}`, {
       headers: {
         Accept: "application/json",

@@ -56,6 +56,9 @@ export const AccountSettings = () => {
             name="username"
             id="username"
             defaultValue={user.username}
+            onChange={(e) =>
+              setLocalUser({ ...localuser, username: e.target.value })
+            }
           />
         </div>
         <div className="modal-settings-view__block--box">
