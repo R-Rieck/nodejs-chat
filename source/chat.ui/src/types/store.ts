@@ -12,6 +12,8 @@ export type UserContext = {
         getContactByName: (name: string) => void;
         addContact: (name: string) => void;
         getContacts: () => Promise<boolean>;
-        setCurrentChatUser: (user: User) => void
+        setCurrentChatUser: (user: User) => void;
+        updateUser: (user: Partial<User>) => void;
+        updateAvatar: (file: File) => void
     }>
 }

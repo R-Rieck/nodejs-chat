@@ -181,6 +181,43 @@ export const StoreProvider = ({ children }: any) => {
     });
   };
 
+  const updateUser = (usr: Partial<User>) => {
+    fetch(`http://localhost:3001/users/update/${user.user._id}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(usr),
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        if (result !== false)
+          changeUser({
+            ...user,
+            user: { ...result },
+          });
+      });
+  };
+
+  const updateAvatar = async (file: File) => {
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    fetch(`http://localhost:3001/users/uploadAvatar/${user.user._id}`, {
+      method: "POST",
+      body: formData,
+    })
+      .then((result) => result.json())
+      .then((result) => {
+        if (result !== false)
+          changeUser({
+            ...user,
+            user: { ...user.user, profilePicture: result.profilePicture },
+          });
+      });
+  };
+
   return (
     <userContext.Provider
       value={{
@@ -192,6 +229,8 @@ export const StoreProvider = ({ children }: any) => {
           addContact: fetchAddContact,
           getContacts: fetchGetContactList,
           setCurrentChatUser: setCurrentChatUser,
+          updateAvatar: updateAvatar,
+          updateUser: updateUser,
         },
       }}
     >

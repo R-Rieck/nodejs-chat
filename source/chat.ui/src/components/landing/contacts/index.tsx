@@ -27,6 +27,7 @@ export const Contacts = () => {
     <div className="contact__container">
       {contacts?.map((user: User) => (
         <SingleUserBlock
+          key={user._id}
           onClick={() =>
             functions &&
             functions.setCurrentChatUser &&

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "../../image";
 import { AddContactModal } from "./modals/addContactModal";
-import { SettingsModals } from "./modals/settingsModal";
+import { SettingsModals } from "./modals/settings/index";
 
 type modalsType = {
   addContact: boolean;

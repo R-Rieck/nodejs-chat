@@ -14,3 +14,19 @@
   background-color: #acffac;
   cursor: pointer;
 }
+
+.action-button-negativ {
+  border: none;
+  height: 30px;
+  width: 100px;
+  margin-left: 0;
+  background-color: #f57878;
+  cursor: pointer;
+}
+
+.action-button-positiv:active,
+.action-button-negativ:active,
+.action-button-positiv:focus,
+.action-button-negativ:focus {
+  outline: none;
+}

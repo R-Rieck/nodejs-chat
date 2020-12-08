@@ -17,6 +17,7 @@
       border-radius: 50%;
       width: 40px;
       height: 40px;
+      object-fit: cover;
     }
     > h2 {
       vertical-align: top;
@@ -34,6 +35,7 @@
 
 .modal__container {
   height: 100%px;
+  position: relative;
   display: flex;
   justify-content: center;
   background-color: #494949;
@@ -88,6 +90,7 @@
         height: 100%;
         border-top-left-radius: 10px;
         border-bottom-left-radius: 10px;
+        object-fit: cover
       }
 
       > h3 {
@@ -104,7 +107,7 @@
 
   .modal-settings__container {
     display: flex;
-    height: 600px;
+    height: 450px;
     width: 900px;
     color: white;
 
@@ -118,7 +121,7 @@
         display: flex;
         justify-content: space-between;
         flex-direction: column;
-        height: 100px;
+        height: 150px;
 
         > h3 {
           border: 2px solid transparent;
@@ -140,29 +143,33 @@
         display: flex;
         width: 100%;
         justify-content: space-between;
-        margin-top: 2rem;
+        margin-top: 4rem;
 
         .modal-settings-view__container--file-upload {
           display: flex;
           align-items: center;
-          border: 1px dashed white;
-          border-radius: 1px;
+          border: 1px solid white;
+          border-radius: 10px;
           width: 100%;
           padding: 1rem;
+          display: flex;
+          flex-direction: column;
 
           > img {
             border-radius: 50%;
-            height: 100px;
-            width: 100px;
+            height: 80px;
+            width: 80px;
+            margin-bottom: 1rem;
+            object-fit: cover;
           }
           .form {
-            margin-left: 5rem;
+            margin: 0 auto;
             width: 300px;
           }
 
           .file-upload-wrapper {
             $defaultColor: #4daf7c;
-            $height: 40px;
+            $height: 30px;
 
             position: relative;
             width: 100%;
@@ -193,7 +200,7 @@
               top: 0;
               right: 0;
               display: inline-block;
-              height: 40px;
+              height: 30px;
               background: $defaultColor;
               color: #fff;
               font-weight: 700;
@@ -219,7 +226,7 @@
               bottom: 0;
               left: 0;
               z-index: 99;
-              height: $height - 20px;
+              height: $height;
               margin: 0;
               padding: 0;
               display: block;
@@ -248,7 +255,27 @@
             outline: none;
           }
         }
+
+        > div > button {
+          border-radius: 10px;
+          margin: 0 1rem;
+        }
+
+        > div > button:last-child {
+          position: absolute;
+          right: 4rem;
+          bottom: 2.5rem;
+          background-color: transparent;
+          border: none;
+          margin: 0 1rem;
+          color: white;
+          font-weight: bold;
+          text-decoration: underline;
+          cursor: pointer;
+        }
       }
+
+      
     }
   }
 }
