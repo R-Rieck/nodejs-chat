@@ -19,7 +19,7 @@ export const AccountSettings = () => {
     if (functions && functions.updateUser && localuser !== undefined)
       functions.updateUser({
         email: localuser.email,
-        password: localuser.password,
+        username: localuser.username
       });
 
     if (
@@ -56,7 +56,6 @@ export const AccountSettings = () => {
             name="username"
             id="username"
             defaultValue={user.username}
-            style={{ color: "gray" }}
           />
         </div>
         <div className="modal-settings-view__block--box">
