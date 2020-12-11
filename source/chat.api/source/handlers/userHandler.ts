@@ -1,30 +1,51 @@
 import { User } from "../types/UserModel";
-import mongoose from 'mongoose';
+import mongoose, { Error } from 'mongoose';
 import userSchema from '../database/models/user';
 import user from "../database/models/user";
 import { comparePassword, hashPassword } from "../infrastructure/passwordEncrypter";
 import fs from "fs";
 import path from "path";
+import { LogOnError } from "./errorHandler";
 
 export const getUserById = async (id: string) => {
-    const user = await userSchema.findById(id).exec().then(result => result)
+    const response = await userSchema
+        .findById(id)
+        .exec()
+        .then(result => result)
+        .catch((err: Error) => err)
 
-    return await user;
+    if (response instanceof Error)
+        LogOnError(response)
+
+    return response;
 }
 
 export const getUserByName = async (body: { username: string }) => {
-    const user = await userSchema.findOne({ username: body.username }).exec().then(result => result)
+    const response = await userSchema
+        .findOne({ username: body.username })
+        .exec()
+        .then(result => result)
+        .catch((err: Error) => err)
 
-    return await user === null ? false : user;
+    if (response instanceof Error)
+        LogOnError(response)
+
+    return response === null ? false : response;
 }
 
 export const getContacts = async (id: string) => {
-    const ids = await userSchema.findById(id).select("contacts").exec().then(result => result)
+    const response = await userSchema
+        .findById(id)
+        .select("contacts")
+        .exec()
+        .then(result => result)
+        .catch((err: Error) => err)
 
-    if (ids !== null) {
-        const contacts = await userSchema.find(ids)
+    if (response instanceof Error)
+        LogOnError(response)
 
-        return await contacts;
+    if (response !== null) {
+        return response;
     }
 
     return false;
@@ -38,13 +59,13 @@ export const validateUser = async (credentials: { login: string, password: strin
         ]
     })
 
-    if (userObj === null) return false;
-    if (await comparePassword(credentials.password, userObj && userObj.toJSON().password)) {
-        
-        return userObj
-    }
+    if (userObj === null)
+        return false;
 
-    return false;
+    const isPasswordEqual = await comparePassword(credentials.password, userObj.toJSON().password);
+
+    if (isPasswordEqual)
+        return userObj
 }
 
 export const addUser = async (user: User): Promise<any> => {
@@ -62,61 +83,76 @@ export const addUser = async (user: User): Promise<any> => {
         }
     })
 
-    const reponse = userSchema.findOne({ username: user.username, email: user.email }).exec().then(async (result: mongoose.MongooseDocument | null) => {
-        if (result === null) {
-            const document = await dbUser.save().catch((err: mongoose.Error) => err);
-            return document;
-        }
-        else return `user with ID: ${result._id} exists`
-    }).catch(err => console.log('CUSTOM ERROR: ', err)
-    );
+    const reponse = userSchema
+        .findOne({ username: user.username, email: user.email })
+        .exec()
+        .then(async (result: mongoose.MongooseDocument | null) => {
+            if (result === null) {
+                const document = await dbUser.save().catch((err: mongoose.Error) => err);
+                return document;
+            }
+            else return `user with ID: ${result._id} exists`
+        })
+        .catch((err: Error) => err)
 
-    console.log(await reponse);
+    if (user instanceof Error)
+        LogOnError(user)
 
     return await reponse;
 }
 
-export const updateAvatar = (img: Express.Multer.File, id: string) => {
-    const data = fs.readFileSync(img.path, {encoding: 'base64'});
+export const updateAvatar = async (img: Express.Multer.File, id: string) => {
+    const data = fs.readFileSync(img.path, { encoding: 'base64' });
 
-    const dbUser = {
+    const avatar = {
         data,
         contentType: 'image/png'
-    }
-        ;
+    };
 
-    console.log(dbUser);
+    const response = await userSchema
+        .updateOne({ _id: id }, { profilePicture: avatar })
+        .exec()
+        .then(result => result.n > 0)
+        .catch((err: Error) => err)
 
+    if (user instanceof Error)
+        LogOnError(user)
 
-    const response = userSchema.updateOne({ _id: id }, { profilePicture: dbUser }).exec().then(result => {
-        if (result.n > 0) {
-            return `user with ID: ${id} updated`
-        }
-        else
-            return `cannot find user with ID: ${id}`
-    })
-
-    return response
+    //if dataset is updated, send back the profile picture
+    if (response)
+        return await userSchema.findById(id).select('profilePicture').exec()
 }
 
 export const updateContacts = async (id: string, contact: any) => {
-    const user = await userSchema.findById({ _id: contact._id }).exec().then(result => {
-        if (result !== null) {
-            return result;
-        }
-        else return false;
-    })
+    const user = await userSchema
+        .findById({ _id: contact._id })
+        .exec()
+        .then(result => result !== null ? result : false)
+        .catch((err: Error) => err)
+
+    if (user instanceof Error)
+        LogOnError(user)
 
     if (user !== false) {
-        const response = await userSchema.updateOne({ _id: id }, { $push: { contacts: user} }).exec().then(result => {
-            if (result.n > 0)
-                return true;
-            else
-                return false;
-        })
+        const response = await userSchema
+            .updateOne({ _id: id }, { $push: { contacts: user } })
+            .exec()
+            .then(result => result.n > 0)
+            .catch((err: Error) => err)
+
+        if (user instanceof Error)
+            LogOnError(user)
 
         if (response !== false) {
-            const updatedUser = await userSchema.findById(id).select('contacts').exec().then(result => result)
+            const updatedUser = await userSchema
+                .findById(id)
+                .select('contacts')
+                .exec()
+                .then(result => result)
+                .catch((err: Error) => err)
+
+            if (user instanceof Error)
+                LogOnError(user)
 
             if (updatedUser !== null)
                 return updatedUser;
@@ -130,25 +166,43 @@ export const updateContacts = async (id: string, contact: any) => {
 
 
 export const updateUser = async (user: User, id: string): Promise<any> => {
-    const response = userSchema.updateOne({ _id: id }, { ...user }).exec().then(result => {
-        if (result.n > 0) {
-            return `user with ID: ${id} updated`
-        }
-        else
-            return `cannot find user with ID: ${id}`
+    const dbUser = new userSchema({
+        username: user.username,
+        email: user.email
     })
 
-    return await response;
+    console.log(dbUser);
+
+
+    const response = userSchema
+        .updateOne({ _id: id }, { ...dbUser })
+        .exec()
+        .then(result => result.n > 0)
+        .catch((err: Error) => err)
+
+    if (user instanceof Error)
+        LogOnError(user)
+
+    console.log(response);
+
+
+    if (response)
+        return await userSchema.findById(id).exec();
 }
 
 export const deleteUser = async (id: string): Promise<any> => {
-    const reponse = userSchema.findById(id).exec().then(result => {
-        if (result !== null) {
-            result.deleteOne();
-            return `user with ID: ${result._id} deleted`
-        }
-        else
-            return `cannot find user with ID: ${id}`
-    })
-    return await reponse;
+    const reponse = await userSchema
+        .findById(id)
+        .exec()
+        .then(result => {
+            if (result !== null) {
+                result.deleteOne();
+                return `user with ID: ${result._id} deleted`
+            }
+            else
+                return `cannot find user with ID: ${id}`
+        }).catch((err: Error) => err)
+
+    if (user instanceof Error)
+        LogOnError(user)
 }

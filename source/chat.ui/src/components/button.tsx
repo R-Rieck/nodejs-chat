@@ -15,7 +15,7 @@ type ButtonProps = {
 };
 
 export const Button = (props: ButtonProps) => {
-  const { text, isDisabled, customStyle, onClick, isFetching } = props;
+  const { text, isDisabled, customStyle, onClick } = props;
 
   return (
     <div className="button-wrapper">

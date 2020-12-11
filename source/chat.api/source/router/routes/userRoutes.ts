@@ -53,7 +53,9 @@ router.post('/', async (req: Request, res: Response) => {
     res.send(infoMessage)
 })
 
-router.post('/uploadAvatar/:userId', upload.single('profilePicture'), async (req: Request, res: Response) => {
+router.post('/uploadAvatar/:userId', upload.single('avatar'), async (req: Request, res: Response) => {
+    console.log(req.file)
+
     const infoMessage = await updateAvatar(req.file, req.params.userId);
 
     res.send(infoMessage)
@@ -71,9 +73,11 @@ router.delete('/:userId', async (req: Request, res: Response) => {
     res.send(infoMessage)
 })
 
-router.put('/:userId', async (req: Request, res: Response) => {
+router.post('/update/:userId', async (req: Request, res: Response) => {
     const user: User = req.body;
 
+    console.log('userdata: ', req.body);
+    
     const infoMessage = await updateUser(user, req.params.userId);
 
     res.send(infoMessage)
