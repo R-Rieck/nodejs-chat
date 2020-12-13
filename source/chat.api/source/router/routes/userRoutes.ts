@@ -28,10 +28,9 @@ router.get('/getContacts/:userId', async (req: Request, res: Response) => {
     const user: any = await getContacts(req.params.userId);
 
     if (user !== false)
-        res.send(user[0].contacts)
-    else 
         res.send(user)
-})
+    else 
+        res.send(user)})
 
 router.post('/getUserByName', async (req: Request, res: Response) => {
     const user = await getUserByName({ ...req.body });
@@ -63,7 +62,8 @@ router.post('/uploadAvatar/:userId', upload.single('avatar'), async (req: Reques
 
 router.post('/add/:userId', async (req: Request, res: Response) => {
     const infoMessage = await updateContacts(req.params.userId, { ...req.body });
-
+    console.log('infomessage: ', infoMessage);
+    
     res.send(infoMessage);
 })
 

@@ -11,6 +11,20 @@ const requiredButNotUnique = {
     unique: false
 }
 
+export interface UserDoc extends mongoose.Document {
+    _id: string,
+    username: string,
+    email: string,
+    password: string,
+    createdAt: Date,
+    profilePicture: {
+        data: String,
+        contentType: String
+    },
+    contacts: [],
+    timestamps: true
+}
+
 const userSchema = new mongoose.Schema(
     {
         _id: mongoose.Schema.Types.ObjectId,
@@ -37,6 +51,6 @@ const userSchema = new mongoose.Schema(
     }
 )
 
-const user = mongoose.model('User', userSchema)
+const user = mongoose.model<UserDoc>('User', userSchema)
 
 export default user;

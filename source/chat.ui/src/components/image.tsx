@@ -22,6 +22,7 @@ export const Avatar = (props: AvatarPropType) => {
 
   useEffect(() => {
     if (
+      profilePicture !== undefined &&
       profilePicture.contentType !== undefined &&
       profilePicture.data !== undefined
     )

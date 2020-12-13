@@ -1,5 +1,5 @@
 import { User } from "../types/UserModel";
-import mongoose, { Error } from 'mongoose';
+import mongoose, { Error, Mongoose } from 'mongoose';
 import userSchema from '../database/models/user';
 import user from "../database/models/user";
 import { comparePassword, hashPassword } from "../infrastructure/passwordEncrypter";
@@ -13,10 +13,9 @@ export const getUserById = async (id: string) => {
         .findById(id)
         .exec()
         .then(result => result)
-        .catch((err: Error) => err)
-
-    if (response instanceof Error)
-        LogOnError(response)
+        .catch((err: Error) => {
+            LogOnError(err)
+        })
 
     return response;
 }
@@ -26,10 +25,9 @@ export const getUserByName = async (body: { username: string }) => {
         .findOne({ username: body.username })
         .exec()
         .then(result => result)
-        .catch((err: Error) => err)
-
-    if (response instanceof Error)
-        LogOnError(response)
+        .catch((err: Error) => {
+            LogOnError(err)
+        })
 
     return response === null ? false : response;
 }
@@ -40,14 +38,12 @@ export const getContacts = async (id: string) => {
         .select("contacts")
         .exec()
         .then(result => result)
-        .catch((err: Error) => err)
+        .catch((err: Error) => {
+            LogOnError(err)
+        })
 
-    if (response instanceof Error)
-        LogOnError(response)
-
-    if (response !== null) {
-        return response;
-    }
+    if (response !== null && response instanceof mongoose.Document)
+        return await userSchema.find({ _id: { $in: response.contacts } });
 
     return false;
 }
@@ -94,10 +90,9 @@ export const addUser = async (user: User): Promise<any> => {
             }
             else return `user with ID: ${result._id} exists`
         })
-        .catch((err: Error) => err)
-
-    if (reponse instanceof Error)
-        LogOnError(reponse)
+        .catch((err: Error) => {
+            LogOnError(err)
+        })
 
     return await reponse;
 }
@@ -114,48 +109,45 @@ export const updateAvatar = async (img: Express.Multer.File, id: string) => {
         .updateOne({ _id: id }, { profilePicture: avatar })
         .exec()
         .then(result => result.n > 0)
-        .catch((err: Error) => err)
-
-    // if (response instanceof Error)
-    //     LogOnError(response)
+        .catch((err: Error) => {
+            LogOnError(err)
+        })
 
     if (response)
         return await userSchema.findById(id).select('profilePicture').exec()
 }
 
 export const updateContacts = async (id: string, contact: any) => {
-    const user = await userSchema
-        .findById({ _id: contact._id })
-        .exec()
-        .then(result => result !== null ? result : false)
-        .catch((err: Error) => err)
+    if (id === contact._id)
+        return false;
 
-    if (user instanceof Error)
-        LogOnError(user)
+    const exists = await userSchema.exists({ "contacts": contact._id });
 
-    if (user !== false) {
+    if (!exists) {
         const response = await userSchema
-            .updateOne({ _id: id }, { $push: { contacts: user } })
+            .updateOne({ _id: id }, { $push: { contacts: contact._id } })
             .exec()
             .then(result => result.n > 0)
-            .catch((err: Error) => err)
+            .catch((err: Error) => {
+                LogOnError(err)
+            })
 
-        if (response instanceof Error)
-            LogOnError(response)
+
 
         if (response !== false) {
             const updatedUser = await userSchema
                 .findById(id)
                 .select('contacts')
-                .exec()
                 .then(result => result)
-                .catch((err: Error) => err)
+                .catch((err: Error) => {
+                    LogOnError(err)
+                })
 
-            if (updatedUser instanceof Error)
-                LogOnError(updatedUser)
+            if (updatedUser !== null && updatedUser instanceof mongoose.Document) {
+                const users = await userSchema.find({ _id: { $in: updatedUser.contacts } })
 
-            if (updatedUser !== null)
-                return updatedUser;
+                return users;
+            }
         }
 
         else return false;
@@ -166,25 +158,13 @@ export const updateContacts = async (id: string, contact: any) => {
 
 
 export const updateUser = async (user: User, id: string): Promise<any> => {
-    const dbUser = new userSchema({
-        username: user.username,
-        email: user.email
-    })
-
-    console.log('DBUSER: ',dbUser);
-
-
     const response = userSchema
-        .updateOne({ _id: id }, { ...dbUser })
+        .updateOne({ _id: id }, { username: user.username, email: user.email })
         .exec()
         .then(result => result.n > 0)
-        .catch((err: Error) => err)
-
-    if (response instanceof Error)
-        LogOnError(response)
-
-    console.log(response);
-
+        .catch((err: Error) => {
+            LogOnError(err)
+        })
 
     if (response)
         return await userSchema.findById(id).exec();
@@ -202,8 +182,7 @@ export const deleteUser = async (id: string): Promise<any> => {
             else
                 return `cannot find user with ID: ${id}`
         })
-        .catch((err: Error) => err)
-
-    if (response instanceof Error)
-        LogOnError(response)
+        .catch((err: Error) => {
+            LogOnError(err)
+        })
 }

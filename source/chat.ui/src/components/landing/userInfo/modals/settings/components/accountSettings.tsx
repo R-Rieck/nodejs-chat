@@ -23,12 +23,7 @@ export const AccountSettings = () => {
   });
 
   const handleUpdateUser = () => {
-    console.log(localuser);
-    console.log(user);
-    console.log("Is localuser === user: ", localuser === user);
-
     if (functions && functions.updateUser && userUpdated) {
-      console.log("updateUser");
       functions.updateUser({
         email: localuser.email,
         username: localuser.username,

@@ -17,7 +17,7 @@ const userContext = createContext<UserContext>({
   functions: {},
   suggestedUser: undefined,
   currentChatUser: undefined,
-  isFetching: false
+  isFetching: false,
 });
 
 export const useUserContext = () => {
@@ -32,7 +32,7 @@ export const StoreProvider = ({ children }: any) => {
     functions: {},
     suggestedUser: undefined,
     currentChatUser: undefined,
-    isFetching: false
+    isFetching: false,
   });
 
   const changeUser = (userCtx: Partial<UserContext>) => {
@@ -43,9 +43,11 @@ export const StoreProvider = ({ children }: any) => {
       currentChatUser: userCtx.currentChatUser || undefined,
       functions: { ...user.functions } || {},
       suggestedUser: userCtx.suggestedUser || undefined,
-      isFetching: false
+      isFetching: false,
     });
   };
+
+  useEffect(() => console.log('contacts: ',user.user.contacts), [user.user]);
 
   //fetching for user Registration
   const fetchRegistration = async (usr: User): Promise<boolean> => {
@@ -84,7 +86,7 @@ export const StoreProvider = ({ children }: any) => {
 
   //fetching for correct login data
   const fetchLogin = async (usr: User): Promise<boolean> => {
-    setUser({...user, isFetching: true})
+    setUser({ ...user, isFetching: true });
 
     const body = await JSON.stringify({
       login: usr.username || usr.email,
@@ -154,7 +156,7 @@ export const StoreProvider = ({ children }: any) => {
         if (result !== false)
           changeUser({
             ...user,
-            user: { ...user.user, contacts: result.contacts },
+            user: { ...user.user, contacts: result },
           });
       })
       .catch((err) => console.error(err));
@@ -174,6 +176,8 @@ export const StoreProvider = ({ children }: any) => {
     })
       .then((result) => result.json())
       .then((result) => {
+        console.log("result: ", result);
+
         changeUser({ ...user, user: { ...user.user, contacts: result } });
       });
 
@@ -187,8 +191,6 @@ export const StoreProvider = ({ children }: any) => {
   };
 
   const updateUser = (usr: Partial<User>) => {
-    console.log(usr);
-
     fetch(`http://localhost:3001/users/update/${user.user._id}`, {
       headers: {
         Accept: "application/json",
