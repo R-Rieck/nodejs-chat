@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useUserContext } from "../../../../../../context/userContext";
 import { User } from "../../../../../../types/user";
 import { ImagePreview } from "../../../../../image";
+import { useUpdateValidation } from "../../../../../../infrastructure/validation";
 
 type PreviewFileType = {
   dataUrl: string | undefined;
@@ -11,23 +12,34 @@ type PreviewFileType = {
 
 export const AccountSettings = () => {
   const { user, functions } = useUserContext();
-
   const [imagePreview, setImagePreview] = useState<PreviewFileType>();
   const [localuser, setLocalUser] = useState<User>({ ...user });
 
+  const userUpdated = useUpdateValidation({
+    username: localuser.username,
+    updatedUsername: user.username,
+    email: localuser.email,
+    updatedEmail: user.email,
+  });
+
   const handleUpdateUser = () => {
-    if (functions && functions.updateUser && localuser !== undefined)
+    console.log(localuser);
+    console.log(user);
+    console.log("Is localuser === user: ", localuser === user);
+
+    if (functions && functions.updateUser && userUpdated) {
+      console.log("updateUser");
       functions.updateUser({
         email: localuser.email,
-        username: localuser.username
+        username: localuser.username,
       });
+    }
 
     if (
       functions &&
       functions.updateAvatar &&
       imagePreview?.file !== undefined
     ) {
-      console.log(imagePreview?.file);
       functions.updateAvatar(imagePreview.file);
     }
   };

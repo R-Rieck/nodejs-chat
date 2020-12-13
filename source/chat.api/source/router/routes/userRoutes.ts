@@ -74,9 +74,9 @@ router.delete('/:userId', async (req: Request, res: Response) => {
 })
 
 router.post('/update/:userId', async (req: Request, res: Response) => {
-    const user: User = req.body;
+    const user: User = await req.body;
 
-    console.log('userdata: ', req.body);
+    console.log('userdata: ', user);
     
     const infoMessage = await updateUser(user, req.params.userId);
 

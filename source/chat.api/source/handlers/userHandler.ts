@@ -116,8 +116,8 @@ export const updateAvatar = async (img: Express.Multer.File, id: string) => {
         .then(result => result.n > 0)
         .catch((err: Error) => err)
 
-    if (user instanceof Error)
-        LogOnError(user)
+    // if (response instanceof Error)
+    //     LogOnError(response)
 
     if (response)
         return await userSchema.findById(id).select('profilePicture').exec()
@@ -171,7 +171,7 @@ export const updateUser = async (user: User, id: string): Promise<any> => {
         email: user.email
     })
 
-    console.log(dbUser);
+    console.log('DBUSER: ',dbUser);
 
 
     const response = userSchema

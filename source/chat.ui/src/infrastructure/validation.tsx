@@ -1,10 +1,18 @@
+import { type } from "os";
 import { useEffect, useState } from "react";
 
-type InputFormFields = {
+type InputFormFieldsPropType = {
   username: string;
   email: string;
   password: string;
   passwordRepeated: string;
+};
+
+type UpdatePropType = {
+  username: string;
+  updatedUsername: string;
+  email: string;
+  updatedEmail: string;
 };
 
 type ValidationType = {
@@ -13,7 +21,19 @@ type ValidationType = {
   password: boolean;
 };
 
-export const useValidation = (props: InputFormFields) => {
+export const useUpdateValidation = (props: UpdatePropType) => {
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
+  const { username, updatedUsername, email, updatedEmail } = props;
+
+  useEffect(() => {
+    if (username !== updatedUsername || email !== updatedEmail)
+      setIsUpdated(true);
+  }, [props]);
+
+  return isUpdated;
+};
+
+export const useValidation = (props: InputFormFieldsPropType) => {
   const [validation, setValidation] = useState<ValidationType>({
     username: false,
     email: false,
