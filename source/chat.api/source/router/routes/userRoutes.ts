@@ -53,8 +53,6 @@ router.post('/', async (req: Request, res: Response) => {
 })
 
 router.post('/uploadAvatar/:userId', upload.single('avatar'), async (req: Request, res: Response) => {
-    console.log(req.file)
-
     const infoMessage = await updateAvatar(req.file, req.params.userId);
 
     res.send(infoMessage)
@@ -62,7 +60,6 @@ router.post('/uploadAvatar/:userId', upload.single('avatar'), async (req: Reques
 
 router.post('/add/:userId', async (req: Request, res: Response) => {
     const infoMessage = await updateContacts(req.params.userId, { ...req.body });
-    console.log('infomessage: ', infoMessage);
     
     res.send(infoMessage);
 })
@@ -76,8 +73,6 @@ router.delete('/:userId', async (req: Request, res: Response) => {
 router.post('/update/:userId', async (req: Request, res: Response) => {
     const user: User = await req.body;
 
-    console.log('userdata: ', user);
-    
     const infoMessage = await updateUser(user, req.params.userId);
 
     res.send(infoMessage)

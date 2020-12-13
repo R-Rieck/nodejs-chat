@@ -47,8 +47,6 @@ export const StoreProvider = ({ children }: any) => {
     });
   };
 
-  useEffect(() => console.log('contacts: ',user.user.contacts), [user.user]);
-
   //fetching for user Registration
   const fetchRegistration = async (usr: User): Promise<boolean> => {
     const body = JSON.stringify({
@@ -167,7 +165,7 @@ export const StoreProvider = ({ children }: any) => {
   const fetchGetContactList = async (): Promise<boolean> => {
     const userId = user.user._id;
 
-    const result = fetch(`http://localhost:3001/users/getContacts/${userId}`, {
+    fetch(`http://localhost:3001/users/getContacts/${userId}`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -176,8 +174,6 @@ export const StoreProvider = ({ children }: any) => {
     })
       .then((result) => result.json())
       .then((result) => {
-        console.log("result: ", result);
-
         changeUser({ ...user, user: { ...user.user, contacts: result } });
       });
 
