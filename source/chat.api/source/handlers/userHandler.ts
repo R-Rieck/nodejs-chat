@@ -6,6 +6,7 @@ import { comparePassword, hashPassword } from "../infrastructure/passwordEncrypt
 import fs from "fs";
 import path from "path";
 import { LogOnError } from "./errorHandler";
+import { response } from "express";
 
 export const getUserById = async (id: string) => {
     const response = await userSchema
@@ -95,8 +96,8 @@ export const addUser = async (user: User): Promise<any> => {
         })
         .catch((err: Error) => err)
 
-    if (user instanceof Error)
-        LogOnError(user)
+    if (reponse instanceof Error)
+        LogOnError(reponse)
 
     return await reponse;
 }
@@ -118,7 +119,6 @@ export const updateAvatar = async (img: Express.Multer.File, id: string) => {
     if (user instanceof Error)
         LogOnError(user)
 
-    //if dataset is updated, send back the profile picture
     if (response)
         return await userSchema.findById(id).select('profilePicture').exec()
 }
@@ -140,8 +140,8 @@ export const updateContacts = async (id: string, contact: any) => {
             .then(result => result.n > 0)
             .catch((err: Error) => err)
 
-        if (user instanceof Error)
-            LogOnError(user)
+        if (response instanceof Error)
+            LogOnError(response)
 
         if (response !== false) {
             const updatedUser = await userSchema
@@ -151,8 +151,8 @@ export const updateContacts = async (id: string, contact: any) => {
                 .then(result => result)
                 .catch((err: Error) => err)
 
-            if (user instanceof Error)
-                LogOnError(user)
+            if (updatedUser instanceof Error)
+                LogOnError(updatedUser)
 
             if (updatedUser !== null)
                 return updatedUser;
@@ -180,8 +180,8 @@ export const updateUser = async (user: User, id: string): Promise<any> => {
         .then(result => result.n > 0)
         .catch((err: Error) => err)
 
-    if (user instanceof Error)
-        LogOnError(user)
+    if (response instanceof Error)
+        LogOnError(response)
 
     console.log(response);
 
@@ -201,8 +201,9 @@ export const deleteUser = async (id: string): Promise<any> => {
             }
             else
                 return `cannot find user with ID: ${id}`
-        }).catch((err: Error) => err)
+        })
+        .catch((err: Error) => err)
 
-    if (user instanceof Error)
-        LogOnError(user)
+    if (response instanceof Error)
+        LogOnError(response)
 }
