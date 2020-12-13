@@ -1,4 +1,3 @@
-import { faUserLock } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
 import { ProfilePicture } from "../types/user";
 

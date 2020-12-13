@@ -25,17 +25,21 @@ export const Contacts = () => {
 
   return (
     <div className="contact__container">
-      {contacts?.map((user: User) => (
-        <SingleUserBlock
-          key={user._id}
-          onClick={() =>
-            functions &&
-            functions.setCurrentChatUser &&
-            functions.setCurrentChatUser(user)
-          }
-          user={user}
-        ></SingleUserBlock>
-      ))}
+      {contacts?.map((user: User) => {
+        return typeof user !== "string" ? (
+          <SingleUserBlock
+            key={user._id}
+            onClick={() =>
+              functions &&
+              functions.setCurrentChatUser &&
+              functions.setCurrentChatUser(user)
+            }
+            user={user}
+          ></SingleUserBlock>
+        ) : (
+          <></>
+        );
+      })}
     </div>
   );
 };
